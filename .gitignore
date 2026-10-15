@@ -12,6 +12,8 @@
 /resources/js/routes
 /resources/js/wayfinder
 /vendor
-/.claude/settings.local.json/.phpunit.cache
+/.claude/settings.local.json
+/.phpunit.cache
 /public/fonts-manifest.dev.json
 .env.before_lerd
+/_handoff

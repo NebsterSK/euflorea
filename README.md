@@ -1,21 +1,28 @@
 # Euflorea
 
-A starter template for personal Laravel apps — Laravel, Inertia, and React with typed routes and a ShadCN-based UI, based on the official Laravel React starter kit. Clone it as the baseline for a new project, then build features on top of the conventions below.
-
-> When starting a project: replace the title and the paragraph above with a 2–3 sentence recap of `PRODUCT.md` (what it is, who it's for, what it does).
+Website for Euflorea, a small Slovak wedding and floral styling studio. Couples planning a wedding browse real weddings and editorial shoots as photo albums, send an inquiry through the contact form and are sent on to Instagram and Facebook. A simple admin lets the studio manage albums, photos and the homepage carousel. Slovak only, mobile first, in the "Herbár" design: warm paper, taped photo prints, plum.
 
 ## Documentation
 
-- `PRODUCT.md` — product specification: users, features, domain, business rules, roadmap.
-- `DESIGN.md` — frontend design system: tokens, typography, spacing, component usage.
+- `PRODUCT.md` — product specification: users, pages, domain, business rules.
+- `DESIGN.md` — "Herbár" design system: tokens, typography, components. Follow it for all UI work.
+- `PLAN.md` — build order with checkboxes, content to seed, open items.
 - `CLAUDE.md` + `.ai/rules/` — coding rules and conventions for contributors and AI agents.
+- `_handoff/` (local only, gitignored) — original design handoff: approved homepage reference HTML, screenshots and the client's full-quality photos.
 
 ## Stack
 
 - PHP 8.5, Laravel 13, MySQL
-- Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (icons); client-side rendering only (SSR off)
+- Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (admin and form icons only); client-side rendering only (SSR off); light theme only
 - Laravel Fortify (auth, email verification routes, 2FA), Laravel Wayfinder (typed routes), Laravel Head (document head)
-- `spatie/laravel-data` (DTOs), `spatie/laravel-typescript-transformer` (TS codegen), `spatie/laravel-query-builder` (filtering/sorting), `spatie/laravel-permission` (roles & permissions)
+- `spatie/laravel-data` (DTOs), `spatie/laravel-typescript-transformer` (TS codegen), `spatie/laravel-query-builder` (filtering/sorting), `spatie/laravel-permission` (installed, unused for now: no roles, any logged-in user can do everything)
+- Being added (see `PLAN.md`): `spatie/laravel-medialibrary` (photos and responsive variants), self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `vite-plugin-svgr` (line art as components), Embla (hero carousel)
+
+## Assets
+
+- `resources/images/brand/logo-plum.png` — working logo (wordmark + sprig, transparent). The tagline is rendered as text. `logo-original.jpg` is the client's original, reference only.
+- `resources/images/svg/` — hand-drawn line art and icons, imported as React components.
+- Photos are uploaded through the admin; the seeder imports the initial albums from `_handoff/photos/` when present.
 - Dev: Laravel Boost (AI guidelines + MCP), Laravel IDE Helper (model doc blocks), Debugbar, Checkpoint, Rapidlogin
 - Quality: Pest (feature + arch tests), Larastan with banned-code rules, Pint, Vite+ (`vp check`: oxlint + oxfmt)
 
