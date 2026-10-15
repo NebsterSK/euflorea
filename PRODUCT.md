@@ -192,13 +192,14 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 
 - **Language:** website Slovak only (`<html lang="sk">`); code, comments and docs in English. Time zone Europe/Bratislava.
 - **Devices:** mobile first, verified at 390px; no horizontal overflow, ≥44px touch targets, no drag-only interactions.
-- **Rendering:** client-side Inertia, no SSR. Per-page `<title>`, Slovak meta description, canonical URL and OG tags via `laravel/head`.
+- **Rendering:** client-side Inertia, no SSR. Controllers set the page title, description and share image with `laravel/head` (`Head::title()`…); the tags are in the initial HTML for crawlers and link previews, and `ServerHead` keeps them in sync after client-side navigation. Defaults (title suffix, Open Graph, icons, `noindex` outside production) live in `AppServiceProvider::configureHead()`.
 - **Images:** every photo (initial import and admin uploads alike) goes through one `spatie/laravel-medialibrary` pipeline. The uploaded original is stored on a **private** disk, never served, and kept only to regenerate variants. The site serves **WebP only** (quality ~82, a balance of quality and fast loads) in responsive widths (e.g. 480, 800, 1200, 1800, 2400), EXIF stripped (GPS) and orientation respected, generated on the queue (a queue worker must run). No AVIF or JPEG fallback. Render with `srcset` + `sizes`, explicit `width`/`height`, lazy loading except above the fold, focal point → `object-position: {focal_x}% {focal_y}%`. Hero first slide `fetchpriority="high"`.
 - **Initial content:** photos are content, not code; the database plus storage is their source of truth and must be in server backups. The initial albums are loaded by an idempotent `photos:import {path}` artisan command (skips albums whose slug exists) that uses the same pipeline as admin uploads. See `PLAN.md` for the one-time production flow.
 - **Performance:** homepage LCP under 2.5s on 4G (the hero carousel image is the LCP).
 - **Accessibility:** WCAG 2.2 AA, see `DESIGN.md` §10.
 - **Privacy:** GDPR. Self-hosted fonts (no Google Fonts CDN), privacy policy page, explicit consent checkbox on the form, no tracking cookies.
-- **SEO:** `sitemap.xml` including albums, `robots.txt`, JSON-LD `Florist` with Instagram and Facebook in `sameAs`, OG image (logo on paper 1200×630 or album cover).
+- **SEO:** `sitemap.xml` (public pages and published albums), dynamic `robots.txt` (closed outside production), JSON-LD `Florist` with Instagram and Facebook in `sameAs`, OG image `public/og-image.jpg` (logo on paper 1200×630) or the album's first photo.
+- **Errors:** 403, 404, 500 and 503 render the branded `site/error` page (server errors only with debug off).
 
 ## 13. Roadmap
 

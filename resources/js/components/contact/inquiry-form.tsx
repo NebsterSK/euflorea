@@ -19,7 +19,7 @@ import { privacy } from '@/routes';
 type Option = { value: string; label: string };
 
 const fieldClassName =
-    'block w-full border border-rule-strong bg-paper-card px-4 py-3 text-base font-light text-ink placeholder:text-muted-ink/60 focus-visible:border-plum focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-plum aria-invalid:border-destructive disabled:opacity-60';
+    'block w-full border border-rule-strong bg-paper-card px-4 py-3 text-base font-light text-ink placeholder:text-muted-ink/80 focus-visible:border-plum focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-plum aria-invalid:border-destructive disabled:opacity-60';
 
 const fieldLabels: Record<string, string> = {
     name: 'Meno a priezvisko',
@@ -230,7 +230,7 @@ export function InquiryForm({
                                             className={cn(
                                                 fieldClassName,
                                                 'text-left',
-                                                !weddingDate && 'text-muted-ink/70',
+                                                !weddingDate && 'text-muted-ink',
                                             )}
                                             {...errorProps('wedding_date', errors.wedding_date)}
                                         >

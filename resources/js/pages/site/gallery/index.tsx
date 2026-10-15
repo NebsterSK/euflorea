@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { AlbumCard } from '@/components/gallery/album-card';
 import { CtaSection } from '@/components/site/cta-section';
@@ -26,12 +26,6 @@ export default function GalleryIndex({
 
     return (
         <>
-            <Head title="Galéria">
-                <meta
-                    name="description"
-                    content="Galéria svadieb a štylizovaných fotení Euflorea: svadobné kytice, výzdoba obradu, stolovanie a styling priestoru."
-                />
-            </Head>
 
             <section className="mx-auto flex max-w-page flex-col gap-5 px-6 pt-16 pb-12 lg:px-10 lg:pt-24 lg:pb-16">
                 <Eyebrow>Galéria</Eyebrow>

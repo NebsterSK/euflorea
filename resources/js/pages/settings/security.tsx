@@ -20,15 +20,15 @@ export default function Security(props: Props) {
 
     return (
         <>
-            <Head title="Security settings" />
+            <Head title="Nastavenia zabezpečenia" />
 
-            <h1 className="sr-only">Security settings</h1>
+            <h1 className="sr-only">Nastavenia zabezpečenia</h1>
 
             <div className="space-y-6">
                 <Heading
                     variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
+                    title="Zmena hesla"
+                    description="Pre bezpečnosť účtu používajte dlhé a náhodné heslo"
                 />
 
                 <Form
@@ -56,7 +56,7 @@ export default function Security(props: Props) {
                         <fieldset disabled={processing} className="space-y-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="current_password">
-                                    Current password
+                                    Aktuálne heslo
                                 </Label>
 
                                 <PasswordInput
@@ -65,14 +65,14 @@ export default function Security(props: Props) {
                                     name="current_password"
                                     className="mt-1 block w-full"
                                     autoComplete="current-password"
-                                    placeholder="Current password"
+                                    placeholder="Aktuálne heslo"
                                 />
 
                                 <InputError message={errors.current_password} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
+                                <Label htmlFor="password">Nové heslo</Label>
 
                                 <PasswordInput
                                     id="password"
@@ -80,7 +80,7 @@ export default function Security(props: Props) {
                                     name="password"
                                     className="mt-1 block w-full"
                                     autoComplete="new-password"
-                                    placeholder="New password"
+                                    placeholder="Nové heslo"
                                     passwordrules={props.passwordRules}
                                 />
 
@@ -89,7 +89,7 @@ export default function Security(props: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Potvrdenie hesla
                                 </Label>
 
                                 <PasswordInput
@@ -97,7 +97,7 @@ export default function Security(props: Props) {
                                     name="password_confirmation"
                                     className="mt-1 block w-full"
                                     autoComplete="new-password"
-                                    placeholder="Confirm password"
+                                    placeholder="Zopakujte nové heslo"
                                     passwordrules={props.passwordRules}
                                 />
 
@@ -111,7 +111,7 @@ export default function Security(props: Props) {
                                     disabled={processing}
                                     data-test="update-password-button"
                                 >
-                                    Save
+                                    Uložiť
                                 </Button>
                             </div>
                         </fieldset>
@@ -131,7 +131,7 @@ export default function Security(props: Props) {
 Security.layout = {
     breadcrumbs: [
         {
-            title: 'Security settings',
+            title: 'Nastavenia zabezpečenia',
             href: edit(),
         },
     ],

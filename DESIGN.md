@@ -415,7 +415,12 @@ Build from the homepage parts. Behaviour and content are in `PRODUCT.md`; visual
 - **Contact**: contact-person paper cards, the two `SocialCard`s (full width on mobile, side by side from `md`), and the form on a taped sheet (same component as "Ako to rastie", max 720px). On `lg` either two columns (info + socials left, form right) or the form centred below, whichever reads cleaner.
 - **Form**: inline errors under each field (destructive, 14px) plus a screen-reader summary at the top. Submit is the outline button, full width on mobile, "Odoslať správu" / "Odosielam…". Success replaces the form with a paper card (sprig + "Ďakujeme! Ozveme sa vám do dvoch dní.") and a Sonner toast.
 
-## 13. Admin
+## 13. Error and legal pages
+
+- **Error page** (`site/error`): page intro pattern (eyebrow "Chyba 404", display heading with one italic word, one line of body) with the large dill sprig on the right and two outline buttons (úvod, galéria).
+- **Privacy page**: page intro, then prose capped at 68ch with serif H2s per section.
+
+## 14. Admin
 
 Stock shadcn with the palette variables above, no herbarium decoration, light only.
 

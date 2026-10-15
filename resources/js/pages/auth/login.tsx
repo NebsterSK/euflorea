@@ -24,7 +24,7 @@ export default function Login({
 }: Props) {
     return (
         <>
-            <Head title="Log in" />
+            <Head title="Prihlásenie" />
 
             <Form
                 {...store.form()}
@@ -35,7 +35,7 @@ export default function Login({
                     <fieldset disabled={processing} className="contents">
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">E-mailová adresa</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -44,21 +44,21 @@ export default function Login({
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder="vas@email.sk"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">Heslo</Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
                                             className="ml-auto text-sm"
                                             tabIndex={5}
                                         >
-                                            Forgot your password?
+                                            Zabudli ste heslo?
                                         </TextLink>
                                     )}
                                 </div>
@@ -68,7 +68,7 @@ export default function Login({
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder="Heslo"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -79,7 +79,7 @@ export default function Login({
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember">Zapamätať si ma</Label>
                             </div>
 
                             <Button
@@ -90,15 +90,15 @@ export default function Login({
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                Prihlásiť sa
                             </Button>
                         </div>
 
                         {canRegister && (
                             <div className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
+                                Nemáte účet?{' '}
                                 <TextLink href={register()} tabIndex={5}>
-                                    Sign up
+                                    Zaregistrujte sa
                                 </TextLink>
                             </div>
                         )}
@@ -116,6 +116,6 @@ export default function Login({
 }
 
 Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
+    title: 'Prihláste sa do svojho účtu',
+    description: 'Na prihlásenie zadajte svoj e-mail a heslo',
 };

@@ -32,7 +32,7 @@ class AlbumController extends Controller
     {
         $query = $request->toData();
 
-        $albums = QueryBuilder::for(Album::query()->withCount('photos')->with(['coverPhoto.media', 'photos.media']))
+        $albums = QueryBuilder::for(Album::query()->withCount('photos')->with(['coverPhoto.media', 'photos' => fn ($photos) => $photos->limit(1), 'photos.media']))
             ->allowedFilters(
                 AllowedFilter::partial('search', 'title'),
                 AllowedFilter::exact('type'),

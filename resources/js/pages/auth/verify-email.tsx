@@ -9,12 +9,12 @@ import { send } from '@/routes/verification';
 export default function VerifyEmail({ status }: { status?: string }) {
     return (
         <>
-            <Head title="Email verification" />
+            <Head title="Overenie e-mailu" />
 
             {status === 'verification-link-sent' && (
                 <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
+                    Na e-mailovú adresu, ktorú ste zadali pri registrácii, sme
+                    poslali nový overovací odkaz.
                 </div>
             )}
 
@@ -23,14 +23,14 @@ export default function VerifyEmail({ status }: { status?: string }) {
                     <fieldset disabled={processing} className="space-y-6">
                         <Button disabled={processing} variant="secondary">
                             {processing && <Spinner />}
-                            Resend verification email
+                            Znova poslať overovací e-mail
                         </Button>
 
                         <TextLink
                             href={logout()}
                             className="mx-auto block text-sm"
                         >
-                            Log out
+                            Odhlásiť sa
                         </TextLink>
                     </fieldset>
                 )}
@@ -40,7 +40,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
 }
 
 VerifyEmail.layout = {
-    title: 'Email verification',
+    title: 'Overenie e-mailu',
     description:
-        'Please verify your email address by clicking on the link we just emailed to you.',
+        'Overte svoju e-mailovú adresu kliknutím na odkaz, ktorý sme vám práve poslali.',
 };

@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { InquiryForm } from '@/components/contact/inquiry-form';
 import { Eyebrow, PaperCard } from '@/components/site/paper';
 import { SocialCard } from '@/components/site/social-card';
@@ -21,12 +21,6 @@ export default function Contact({
 
     return (
         <>
-            <Head title="Kontakt">
-                <meta
-                    name="description"
-                    content="Plánujete svadbu? Napíšte Euflorea termín a miesto a ozveme sa do dvoch dní. Svadobné kytice, výzdoba obradu, stolovanie a styling."
-                />
-            </Head>
 
             <div className="mx-auto grid max-w-page gap-14 px-4 pt-14 pb-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:px-10 lg:pt-24 lg:pb-32">
                 <div className="flex flex-col gap-10 lg:pt-4">

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { SiteFooter } from '@/components/site/site-footer';
+import { ServerHead } from '@/components/site/server-head';
 import { SiteHeader } from '@/components/site/site-header';
 
 /**
@@ -10,6 +11,7 @@ import { SiteHeader } from '@/components/site/site-header';
 export default function SiteLayout({ children }: { children: ReactNode }) {
     return (
         <div className="flex min-h-svh flex-col overflow-x-clip text-ink">
+            <ServerHead />
             <a
                 href="#obsah"
                 className="sr-only z-50 bg-paper-card px-4 py-3 text-plum focus:not-sr-only focus:absolute focus:top-2 focus:left-2"

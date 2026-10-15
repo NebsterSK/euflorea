@@ -38,7 +38,7 @@ test('users can update their profile', function () {
             'email' => 'jane@example.com',
         ])
         ->assertSessionHasNoErrors()
-        ->assertInertiaFlash('toast', ['type' => 'success', 'message' => 'Profile updated.'])
+        ->assertInertiaFlash('toast', ['type' => 'success', 'message' => 'Profil bol uložený.'])
         ->assertRedirect(route('profile.edit'));
 
     $user->refresh();

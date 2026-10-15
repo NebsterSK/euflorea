@@ -24,6 +24,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Operator
+    |--------------------------------------------------------------------------
+    |
+    | The controller of personal data named on the privacy page. Fill in once
+    | the client confirms the company details.
+    |
+    */
+
+    'operator' => [
+        'name' => env('SITE_OPERATOR_NAME'),
+        'address' => env('SITE_OPERATOR_ADDRESS'),
+        'company_id' => env('SITE_OPERATOR_COMPANY_ID'),
+        'email' => env('SITE_OPERATOR_EMAIL'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Contact
     |--------------------------------------------------------------------------
     |

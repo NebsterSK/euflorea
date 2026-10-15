@@ -9,8 +9,13 @@ import SiteLayout from '@/layouts/site-layout';
 const appName = import.meta.env.VITE_APP_NAME || 'Euflorea';
 
 void createInertiaApp({
+    // Public pages get complete titles from the server (laravel/head).
     title: (title) =>
-        title ? `${title} · ${appName}` : `${appName} · Svadobný a kvetinový styling`,
+        !title
+            ? `${appName} · Svadobný a kvetinový styling`
+            : title.includes(appName)
+              ? title
+              : `${title} · ${appName}`,
     layout: (name) => {
         switch (true) {
             case name.startsWith('site/'):

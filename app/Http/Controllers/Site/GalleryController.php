@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Album;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Head\Facades\Head;
 
 class GalleryController extends Controller
 {
@@ -20,8 +21,16 @@ class GalleryController extends Controller
         $albums = Album::query()
             ->visibleInGallery()
             ->galleryOrder()
-            ->with(['coverPhoto.media', 'photos.media'])
+            ->with([
+                'coverPhoto.media',
+                // Only the fallback cover is needed for the cards.
+                'photos' => fn ($query) => $query->limit(1),
+                'photos.media',
+            ])
             ->get();
+
+        Head::title('Galéria')
+            ->description('Galéria svadieb a štylizovaných fotení Euflorea: svadobné kytice, výzdoba obradu, stolovanie a styling priestoru.');
 
         return Inertia::render('site/gallery/index', [
             'albums' => AlbumCardData::collect($albums),
@@ -46,8 +55,14 @@ class GalleryController extends Controller
             ? Album::query()->find($nextId, ['title', 'slug'])
             : null;
 
+        $page = AlbumPageData::fromAlbum($album);
+
+        Head::title($album->title)
+            ->description($album->description ?: "{$album->type->label()} {$album->title}: kvety a výzdoba od Euflorea.")
+            ->when($page->photos !== [], fn ($head) => $head->ogImage($page->photos[0]->src, alt: $page->photos[0]->alt));
+
         return Inertia::render('site/gallery/show', [
-            'album' => AlbumPageData::fromAlbum($album),
+            'album' => $page,
             'next' => $next ? new AlbumLinkData($next->title, $next->slug) : null,
         ]);
     }

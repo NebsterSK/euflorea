@@ -68,6 +68,14 @@ npm run types:check          # tsc
 - The admin downscales large photos in the browser before upload, so uploads stay around 1–3 MB. PHP still needs `upload_max_filesize` / `post_max_size` above that (lerd's default is 2M / 8M; raise them in `~/.local/share/lerd/php/8.5/98-user.ini` and on the server, e.g. 20M / 25M).
 - Initial content: `php artisan photos:import _handoff/photos` (manifest in `database/data/initial-albums.json`, safe to re-run). See `PLAN.md` for the one-time production flow.
 
+## SEO and head
+
+Controllers describe the page with `laravel/head` (`Head::title('Galéria')->description(…)`); defaults, icons and `noindex` outside production are in `AppServiceProvider::configureHead()`. The root view renders them with `@head`, so crawlers and link previews get real tags without SSR, and `ServerHead` (public layout) mirrors them on client-side navigation. `robots.txt` and `sitemap.xml` are routes (`SeoController`).
+
+## Configuration
+
+`config/site.php` (env `SITE_*`): Instagram/Facebook URLs (a profile without a URL is hidden), contact people, inquiry recipient and confirmation mail, and the data controller shown on the privacy page.
+
 ## Architecture
 
 ### Requests, DTOs and TypeScript

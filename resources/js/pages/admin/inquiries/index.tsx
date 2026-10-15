@@ -162,12 +162,12 @@ export default function InquiriesIndex({
                                         <dd className="tabular-nums">
                                             {inquiry.dateUnknown
                                                 ? 'dátum zatiaľ nevedia'
-                                                : (inquiry.weddingDate ?? '–')}
+                                                : (inquiry.weddingDate ?? 'neuvedený')}
                                         </dd>
                                         <dt className="text-muted-foreground">Miesto</dt>
-                                        <dd>{inquiry.venue ?? '–'}</dd>
+                                        <dd>{inquiry.venue ?? 'neuvedené'}</dd>
                                         <dt className="text-muted-foreground">Hostia</dt>
-                                        <dd>{inquiry.guests ?? '–'}</dd>
+                                        <dd>{inquiry.guests ?? 'neuvedené'}</dd>
                                     </dl>
                                     {inquiry.services.length > 0 && (
                                         <div className="flex flex-wrap gap-1">

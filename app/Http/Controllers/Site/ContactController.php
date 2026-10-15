@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Head\Facades\Head;
 use Throwable;
 
 class ContactController extends Controller
@@ -26,6 +27,9 @@ class ContactController extends Controller
      */
     public function show(#[Config('site.contact.people')] array $people): Response
     {
+        Head::title('Kontakt')
+            ->description('Plánujete svadbu? Napíšte Euflorea termín a miesto a ozveme sa do dvoch dní.');
+
         return Inertia::render('site/contact', [
             'people' => ContactPersonData::collect($people),
             'guestOptions' => array_map(

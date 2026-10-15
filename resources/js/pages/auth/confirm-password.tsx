@@ -9,17 +9,17 @@ import { store } from '@/routes/password/confirm';
 export default function ConfirmPassword() {
     return (
         <>
-            <Head title="Confirm password" />
+            <Head title="Potvrdenie hesla" />
 
             <Form {...store.form()} resetOnSuccess={['password']}>
                 {({ processing, errors }) => (
                     <fieldset disabled={processing} className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Heslo</Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder="Heslo"
                                 autoComplete="current-password"
                                 autoFocus
                             />
@@ -34,7 +34,7 @@ export default function ConfirmPassword() {
                                 data-test="confirm-password-button"
                             >
                                 {processing && <Spinner />}
-                                Confirm password
+                                Potvrdiť heslo
                             </Button>
                         </div>
                     </fieldset>
@@ -45,7 +45,7 @@ export default function ConfirmPassword() {
 }
 
 ConfirmPassword.layout = {
-    title: 'Confirm password',
+    title: 'Potvrdenie hesla',
     description:
-        'This is a secure area of the application. Please confirm your password before continuing.',
+        'Toto je zabezpečená časť aplikácie. Pred pokračovaním potvrďte svoje heslo.',
 };

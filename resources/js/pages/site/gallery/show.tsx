@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { Lightbox } from '@/components/gallery/lightbox';
 import { CtaSection } from '@/components/site/cta-section';
@@ -16,15 +16,8 @@ export default function GalleryShow({
     const triggers = useRef<(HTMLButtonElement | null)[]>([]);
     const lastOpened = useRef(0);
 
-    const description =
-        album.description ??
-        `${album.typeLabel} ${album.title}: kvety a výzdoba od Euflorea.`;
-
     return (
         <>
-            <Head title={album.title}>
-                <meta name="description" content={description} />
-            </Head>
 
             <header className="mx-auto flex max-w-page flex-col gap-4 px-6 pt-12 pb-10 lg:px-10 lg:pt-20 lg:pb-14">
                 <Link

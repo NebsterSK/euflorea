@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
+use Laravel\Head\ErrorPages;
+use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureModels();
         $this->configureRateLimiting();
+        $this->configureHead();
+        $this->configureErrorPages();
 
         Date::use(CarbonImmutable::class);
 
@@ -44,6 +51,59 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Site-wide document head: titles as "Page · Euflorea", Open Graph from the
+     * page title and description, the logo card as the default share image,
+     * icons, and no indexing outside production. Page tags are server-rendered
+     * for crawlers and link previews; the client only updates the title.
+     */
+    protected function configureHead(): void
+    {
+        Head::defaults(fn (HeadBuilder $head) => $head
+            ->title('Euflorea · Svadobný a kvetinový styling', suffix: ' · Euflorea')
+            ->description('Euflorea, svadobný a kvetinový styling. Navrhujeme a realizujeme svadobné kytice, výzdobu obradu, stolovanie aj styling celého priestoru.')
+            ->canonical()
+            ->og(type: 'website', siteName: 'Euflorea', locale: 'sk_SK')
+            ->ogImage(asset('og-image.jpg'), alt: 'Euflorea, svadobný a kvetinový styling', width: 1200, height: 630)
+            ->twitter('summary_large_image')
+            ->when(! $this->app->isProduction(), fn (HeadBuilder $builder) => $builder->hiddenFromRobots()));
+
+        Head::errors(fn (ErrorPages $pages) => $pages
+            ->defaults(fn (HeadBuilder $head) => $head->hiddenFromRobots())
+            ->status(403, title: 'Sem nemáte prístup')
+            ->status(404, title: 'Stránka neexistuje')
+            ->status(500, title: 'Niečo sa pokazilo')
+            ->status(503, title: 'Práve robíme údržbu'));
+
+        // Server-owned tags that Inertia must never swap out on navigation.
+        Head::inertiaGlobals(fn (HeadBuilder $head) => $head
+            ->colorScheme('light')
+            ->themeColor('#FAF6F2')
+            ->favicon('/favicon.ico', sizes: 'any')
+            ->icon('/favicon.svg', type: 'image/svg+xml')
+            ->appleTouchIcon('/apple-touch-icon.png'));
+    }
+
+    /**
+     * Branded error pages. 404 and 403 always; server errors only when debug
+     * is off, so local development keeps the detailed exception page.
+     */
+    protected function configureErrorPages(): void
+    {
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+            $status = $response->statusCode();
+            $isServerError = in_array($status, [500, 503], true);
+
+            if (! in_array($status, [403, 404, 500, 503], true) || ($isServerError && config('app.debug'))) {
+                return null;
+            }
+
+            Head::status($status);
+
+            return $response->render('site/error', ['status' => $status])->withSharedData();
+        });
     }
 
     /**

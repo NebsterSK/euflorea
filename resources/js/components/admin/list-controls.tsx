@@ -152,7 +152,7 @@ export function Pagination({
     return (
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
             <p className="tabular-nums">
-                {meta.from}–{meta.to} z {meta.total}
+                {meta.from} až {meta.to} z {meta.total}
             </p>
             {meta.lastPage > 1 && (
                 <div className="flex items-center gap-2">

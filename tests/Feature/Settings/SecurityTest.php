@@ -59,7 +59,7 @@ test('users can update their password', function () {
             'password_confirmation' => 'New-Passw0rd!2026',
         ])
         ->assertSessionHasNoErrors()
-        ->assertInertiaFlash('toast', ['type' => 'success', 'message' => 'Password updated.'])
+        ->assertInertiaFlash('toast', ['type' => 'success', 'message' => 'Heslo bolo zmenené.'])
         ->assertRedirect(route('security.edit'));
 
     expect(Hash::check('New-Passw0rd!2026', $user->refresh()->password))->toBeTrue();

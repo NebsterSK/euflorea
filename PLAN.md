@@ -42,7 +42,7 @@ Build order and progress for the Euflorea website. Specs live in `PRODUCT.md` (w
 - [x] Inquiries list with "handled" switch
 - [x] `photos:import {path}` artisan command (manifest `database/data/initial-albums.json`): creates the albums and carousel album below through the same media pipeline as admin uploads; idempotent (skips existing slugs). Locally run on `_handoff/photos`
 - [x] Slovak validation messages (`lang/sk/validation.php`)
-- [ ] Translate the starter kit auth and settings screens (login, password reset, profile) to Slovak
+- [x] Translate the starter kit auth and settings screens (login, password reset, profile) to Slovak
 
 ### Content to seed
 
@@ -87,20 +87,20 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 ### Initial photos to production (one time)
 
 - [ ] Select the photos to publish; downscale to ~2560px long side (high-quality JPG) and strip EXIF
-- [ ] Put them in `storage/app/import/photos/` (same `uvod/`, `svadby/…`, `editorials/…` structure, `.gitignore` exception) and commit
+- [ ] Put them in `storage/app/import/photos/` (same `uvod/`, `svadby/…`, `editorials/…` structure) and commit with `git add -f` (storage is gitignored)
 - [ ] Deploy, then run `php artisan photos:import storage/app/import/photos` on production by hand (never from the deploy script)
 - [ ] Next commit: remove `storage/app/import/photos/`
 
 ### Everything else
 
-
-- [ ] Privacy policy page
-- [ ] SEO: titles, descriptions, canonical, OG image, `sitemap.xml`, `robots.txt`, JSON-LD `Florist`
-- [ ] Favicon from the dill sprig
-- [ ] Branded error pages (404, 500) in the Herbár style
+- [x] Privacy policy page (generic GDPR text; operator details from `SITE_OPERATOR_*`; client must review)
+- [x] SEO: server-rendered titles, descriptions, canonical, Open Graph / Twitter (laravel/head, mirrored client-side by `ServerHead`), OG image `public/og-image.jpg`, `sitemap.xml`, `robots.txt` (closed outside production), JSON-LD `Florist`
+- [x] Favicon from the dill sprig (`favicon.svg`, `favicon.ico`, `apple-touch-icon.png`; redo from the vector logo later)
+- [x] Branded error pages (403, 404, 500, 503) in the Herbár style (server errors only when `APP_DEBUG=false`)
 - [ ] Decide on Fortify registration (currently enabled; users are meant to be added manually)
-- [ ] Accessibility pass (axe/Lighthouse, AA) and performance pass (LCP < 2.5s on 4G)
-- [ ] Mobile check of every page at 390px
+- [x] Accessibility pass: Lighthouse on home and contact, only dev-toolbar findings left
+- [ ] Performance pass (LCP < 2.5s on 4G) on a production build with debugbar off
+- [x] Mobile check of every page at 390px (no horizontal overflow)
 
 ## 7. Later
 
@@ -109,8 +109,8 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 
 ## Open items (client or Lukas)
 
-- [ ] Facebook page URL (currently `#`)
-- [ ] Contact people: names, roles, phones, emails
+- [ ] Facebook page URL (`SITE_FACEBOOK_URL`; the Facebook links and card are hidden until it is set)
+- [ ] Contact people: names, roles, phones, emails (`config/site.php` → `contact.people`)
 - [ ] Inquiry recipient email + free way of sending mail (no paid service)
 - [ ] Vector logo (SVG) from the client
 - [ ] Photographer credits for every wedding and editorial, and permission to publish

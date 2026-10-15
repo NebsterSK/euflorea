@@ -230,7 +230,7 @@ export default function AlbumsIndex({
                                         </TableCell>
                                         <TableCell>{album.typeLabel}</TableCell>
                                         <TableCell className="tabular-nums">
-                                            {album.weddingDate ?? '–'}
+                                            {album.weddingDate ?? 'bez dátumu'}
                                         </TableCell>
                                         <TableCell className="text-right tabular-nums">
                                             {album.photosCount}

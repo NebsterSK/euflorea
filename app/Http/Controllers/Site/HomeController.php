@@ -8,6 +8,7 @@ use App\Models\Album;
 use App\Models\Photo;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Head\Facades\Head;
 
 class HomeController extends Controller
 {
@@ -26,6 +27,20 @@ class HomeController extends Controller
             ->map(fn (Photo $photo): ImageData => ImageData::fromPhoto($photo))
             ->values()
             ->all() ?? [];
+
+        Head::schema([
+            '@context' => 'https://schema.org',
+            '@type' => 'Florist',
+            'name' => 'Euflorea',
+            'description' => 'Svadobný a kvetinový styling: svadobné kytice, výzdoba obradu, stolovanie a styling priestoru.',
+            'url' => route('index'),
+            'image' => asset('og-image.jpg'),
+            'areaServed' => 'SK',
+            'sameAs' => array_values(array_filter([
+                config('site.instagram.url'),
+                config('site.facebook.url'),
+            ])),
+        ]);
 
         return Inertia::render('site/home', [
             'slides' => $slides,
