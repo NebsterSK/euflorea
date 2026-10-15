@@ -62,6 +62,12 @@ npm run types:check          # tsc
 
 > Wayfinder note: the Vite plugin generates route helpers with `formVariants: true` (`vite.config.ts`). When regenerating from the CLI, always pass `--with-form`, otherwise pages that use `route.form()` (auth/settings) break.
 
+## Photos
+
+- Every photo (admin upload or `php artisan photos:import {path}`) goes through `App\Actions\Albums\AddPhotoToAlbum`: EXIF orientation applied, metadata stripped, long edge capped at 3000px, stored as the private original on the `originals` disk (`storage/app/originals`). The media library then writes WebP conversions (`web` with responsive widths, `thumb` for the admin) to the `public` disk. Conversions are queued: run a queue worker in production (`QUEUE_CONNECTION=sync` locally runs them inline).
+- The admin downscales large photos in the browser before upload, so uploads stay around 1–3 MB. PHP still needs `upload_max_filesize` / `post_max_size` above that (lerd's default is 2M / 8M; raise them in `~/.local/share/lerd/php/8.5/98-user.ini` and on the server, e.g. 20M / 25M).
+- Initial content: `php artisan photos:import _handoff/photos` (manifest in `database/data/initial-albums.json`, safe to re-run). See `PLAN.md` for the one-time production flow.
+
 ## Architecture
 
 ### Requests, DTOs and TypeScript

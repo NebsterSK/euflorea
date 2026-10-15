@@ -28,19 +28,21 @@ Build order and progress for the Euflorea website. Specs live in `PRODUCT.md` (w
 - [x] `ProcessSection` (full-bleed photo `wild_west_editorial/9` as static WebP in `resources/images/home/`, focal desktop `center 58%`, mobile `center 40%`)
 - [x] `CtaSection`
 - [x] `HeroCarousel` with flower-stem controls (custom, no library)
-- [ ] Feed the carousel from the homepage carousel album (phase 3)
+- [x] Feed the carousel from the homepage carousel album
 - [ ] Compare against `_handoff/screenshots/` at 390, 1440 and 1920
 
 ## 3. Data, media and admin
 
-- [ ] Install and configure `spatie/laravel-medialibrary`: originals on a private disk, WebP-only responsive variants (quality ~82), EXIF stripped, orientation fixed, queued conversions
-- [ ] Migrations, models, factories: `albums`, `photos`, `inquiries`
-- [ ] Admin routes under `/admin` (auth), sidebar nav entries
-- [ ] Albums: list (cover, title, type, date, published, photo count, reorder), create/edit form, delete with confirm
-- [ ] Photos: multi-upload with progress, reorder (drag + up/down buttons), alt text, focal point by tap, set cover, delete
-- [ ] Homepage carousel album (`is_homepage_carousel`, only one)
-- [ ] Inquiries list with "handled" checkbox
-- [ ] `photos:import {path}` artisan command: creates the albums and carousel album below through the same media pipeline as admin uploads; idempotent (skips existing slugs). Locally run it on `_handoff/photos`
+- [x] Install and configure `spatie/laravel-medialibrary`: originals on a private disk, WebP-only responsive variants (quality ~82), EXIF stripped, orientation fixed, queued conversions (`AddPhotoToAlbum` cleans every source first)
+- [x] Migrations, models, factories: `albums`, `photos`, `inquiries`
+- [x] Admin routes under `/admin` (auth), sidebar nav entries, Slovak admin screens
+- [x] Albums: list (cover, title, type, date, published, photo count, reorder), create/edit form, delete with confirm
+- [x] Photos: multi-upload with progress (downscaled in the browser to 3000px), reorder (drag + arrow buttons), alt text, focal point by tap with crop previews, set cover, delete
+- [x] Homepage carousel album (`is_homepage_carousel`, only one)
+- [x] Inquiries list with "handled" switch
+- [x] `photos:import {path}` artisan command (manifest `database/data/initial-albums.json`): creates the albums and carousel album below through the same media pipeline as admin uploads; idempotent (skips existing slugs). Locally run on `_handoff/photos`
+- [x] Slovak validation messages (`lang/sk/validation.php`)
+- [ ] Translate the starter kit auth and settings screens (login, password reset, profile) to Slovak
 
 ### Content to seed
 

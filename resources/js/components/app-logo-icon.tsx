@@ -1,13 +1,25 @@
 import type { SVGAttributes } from 'react';
 
+/**
+ * The dill sprig from the Euflorea logo, used as the compact brand mark in
+ * the admin and auth screens.
+ */
 export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
     return (
-        <svg {...props} viewBox="0 0 40 42" xmlns="http://www.w3.org/2000/svg">
-            <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M17.2 5.63325L8.6 0.855469L0 5.63325V32.1434L16.2 41.1434L32.4 32.1434V23.699L40 19.4767V9.85547L31.4 5.07769L22.8 9.85547V18.2999L17.2 21.411V5.63325ZM38 18.2999L32.4 21.411V15.2545L38 12.1434V18.2999ZM36.9409 10.4439L31.4 13.5221L25.8591 10.4439L31.4 7.36561L36.9409 10.4439ZM24.8 18.2999V12.1434L30.4 15.2545V21.411L24.8 18.2999ZM23.8 20.0323L29.3409 23.1105L16.2 30.411L10.6591 27.3328L23.8 20.0323ZM7.6 27.9212L15.2 32.1434V38.2999L2 30.9666V7.92116L7.6 11.0323V27.9212ZM8.6 9.29991L3.05913 6.22165L8.6 3.14339L14.1409 6.22165L8.6 9.29991ZM30.4 24.8101L17.2 32.1434V38.2999L30.4 30.9666V24.8101ZM9.6 11.0323L15.2 7.92117V22.5221L9.6 25.6333V11.0323Z"
-            />
+        <svg {...props} viewBox="0 20 120 240" xmlns="http://www.w3.org/2000/svg">
+            <g
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="5"
+                strokeLinecap="round"
+            >
+                <path d="M60 258C58 200 62 140 58 60" />
+                <path d="M58 60l-14-18M58 60l-6-22M58 60l2-23M58 60l10-20M58 60l17-14" />
+                <path d="M59 150c10-20 20-36 34-48" />
+                <path d="M93 102l-10-12M93 102l-2-15M93 102l6-13M93 102l12-7" />
+                <path d="M59 180c-10-16-22-28-36-34" />
+                <path d="M23 146l-6-12M23 146l2-14M23 146l9-10M23 146l-12-4" />
+            </g>
         </svg>
     );
 }
