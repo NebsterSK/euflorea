@@ -11,23 +11,24 @@ Build order and progress for the Euflorea website. Specs live in `PRODUCT.md` (w
 
 ## 1. Foundation
 
-- [ ] Install `@fontsource/cormorant-garamond`, `@fontsource/jost` (with `latin-ext`), `vite-plugin-svgr`, `embla-carousel-react` + `embla-carousel-fade` + `embla-carousel-autoplay`
-- [ ] Tailwind theme tokens and shadcn variables from `DESIGN.md` §2 in `resources/css/app.css`; remove `.dark` tokens
-- [ ] Remove dark mode: appearance setting, `use-appearance` hook, `.dark` toggle
-- [ ] Fonts self-hosted (Cormorant Garamond 400/500 + italics, Jost 300/400/500), preload the two most used
-- [ ] Paper grain as a small tiling raster on `body`
-- [ ] `<html lang="sk">`, Slovak app locale, Europe/Bratislava time zone
-- [ ] Public layout: `SiteHeader` (desktop bar + mobile `Sheet` menu), `SiteFooter`, `Logo` component with tagline text
-- [ ] Shared paper primitives: `PaperCard`, `PhotoPrint`, `Tape`, `TapedSheet`, `Button` outline/icon variants, `SocialCard`
+- [x] Install `@fontsource/cormorant-garamond`, `@fontsource/jost`, `embla-carousel-react` (svgr dropped: incompatible with Babel 8; icons are React components in `icons.tsx`)
+- [x] Tailwind theme tokens and shadcn variables from `DESIGN.md` §2 in `resources/css/app.css`; remove `.dark` tokens
+- [x] Remove dark mode: appearance setting, `use-appearance` hook, `.dark` toggle
+- [x] Fonts self-hosted (Cormorant Garamond 400/500 + italics, Jost 300/400/500), `font-display: swap`
+- [x] Paper grain as a small tiling raster on `body`
+- [x] `<html lang="sk">`, Slovak app locale, Europe/Bratislava time zone
+- [x] Public layout: `SiteHeader` (desktop bar + mobile `Sheet` menu), `SiteFooter`, `Logo` component with tagline text
+- [x] Shared paper primitives: `PaperCard`, `Tape`, `TapedSheet`, `Eyebrow`, `Button` `paper` variant + `header`/`cta`/`round` sizes, `SocialCard`
 
 ## 2. Homepage
 
-- [ ] `LogoHero`
-- [ ] `IntroSection`
-- [ ] `ServicesSection`
-- [ ] `ProcessSection` (full-bleed photo `wild_west_editorial/9`, focal desktop `center 58%`, mobile `center 40%`)
-- [ ] `CtaSection`
-- [ ] `HeroCarousel` with flower-stem controls (static slides first, then from the carousel album)
+- [x] `LogoHero`
+- [x] `IntroSection`
+- [x] `ServicesSection`
+- [x] `ProcessSection` (full-bleed photo `wild_west_editorial/9` as static WebP in `resources/images/home/`, focal desktop `center 58%`, mobile `center 40%`)
+- [x] `CtaSection`
+- [x] `HeroCarousel` with flower-stem controls (custom, no library)
+- [ ] Feed the carousel from the homepage carousel album (phase 3)
 - [ ] Compare against `_handoff/screenshots/` at 390, 1440 and 1920
 
 ## 3. Data, media and admin

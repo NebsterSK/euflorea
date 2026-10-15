@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Site\HomeController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('index');
+Route::get('/', HomeController::class)->name('index');
+Route::inertia('galeria', 'site/gallery/index')->name('gallery.index');
+Route::inertia('kontakt', 'site/contact')->name('contact');
+Route::inertia('ochrana-osobnych-udajov', 'site/privacy')->name('privacy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

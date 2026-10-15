@@ -53,7 +53,7 @@ All colours below are taken from the approved design. The single theme is **ligh
 | `ink` | `oklch(29.7% 0.053 338.3)` | `#3E2236` | Default text colour on paper (root), shadow base |
 | `ink-deep` | `oklch(23.0% 0.036 340.2)` | `#281622` | Shadow base for the large photo-section card |
 | `text` | `oklch(42.8% 0.025 346.6)` | `#5A4A52` | Body copy |
-| `muted` | `oklch(48.6% 0.024 354.8)` | `#6B5A60` | Footer text |
+| `muted-ink` | `oklch(48.6% 0.024 354.8)` | `#6B5A60` | Footer text |
 | `taupe` | `oklch(59.1% 0.027 59.1)` | `#8A7A6E` | Header tagline (decorative serif italic). See accessibility note |
 | `taupe-text` | `oklch(52.5% 0.026 58.4)` | `#76675C` | Accessible variant of taupe for small text (5.0:1) |
 | `rose` | `oklch(57.2% 0.083 342.7)` | `#9A6485` | Botanical line art, stems, eyebrow labels. See accessibility note |
@@ -88,7 +88,7 @@ All colours below are taken from the approved design. The single theme is **ligh
 | plum / paper | 11.0 | everything |
 | ink / paper | 13.1 | everything |
 | text / paper | 7.7 | everything |
-| muted / paper | 6.0 | everything |
+| muted-ink / paper | 6.0 | everything |
 | cream on plum | 10.4 | everything |
 | blush on plum | 7.9 | everything |
 | rose / paper | **4.3** | large text (≥24px) and decoration only |
@@ -98,99 +98,21 @@ All colours below are taken from the approved design. The single theme is **ligh
 
 ### Tailwind 4 theme (`resources/css/app.css`)
 
-```css
-@import "tailwindcss";
+`app.css` is the source of truth for the values; this table is the vocabulary. Every palette colour above is a `--color-*` token (`bg-paper`, `text-plum`, `border-rule-strong`, `bg-tape-sand`, …) with two renames to avoid clashing with shadcn: the footer colour is **`muted-ink`** (shadcn owns `muted`), and font sizes use their own names:
 
-@theme {
-  /* palette */
-  --color-paper: oklch(97.5% 0.007 67.7);
-  --color-paper-card: oklch(98% 0.009 84.6);
-  --color-plum: oklch(34.9% 0.081 336.4);
-  --color-plum-hover: oklch(47.5% 0.079 340.4);
-  --color-ink: oklch(29.7% 0.053 338.3);
-  --color-ink-deep: oklch(23% 0.036 340.2);
-  --color-text: oklch(42.8% 0.025 346.6);
-  --color-muted: oklch(48.6% 0.024 354.8);
-  --color-taupe: oklch(59.1% 0.027 59.1);
-  --color-taupe-text: oklch(52.5% 0.026 58.4);
-  --color-rose: oklch(57.2% 0.083 342.7);
-  --color-rose-text: oklch(53.2% 0.077 343.3);
-  --color-rose-line: oklch(73.9% 0.063 346.1);
-  --color-rule: oklch(85.1% 0.024 73.6);
-  --color-rule-strong: oklch(81.2% 0.028 72.7);
-  --color-photo-bg: oklch(91.2% 0.01 48.6);
-  --color-cream: oklch(95.8% 0.012 75.4);
-  --color-blush: oklch(87.3% 0.04 351.5);
-  --color-bud: oklch(89.8% 0.024 351.4);
-  --color-leaf: oklch(89% 0.022 348.8);
-  --color-pollen: oklch(90.1% 0.072 86.9);
-  --color-heart: oklch(57.6% 0.124 353.4);
-  --color-tape-sand: oklch(82.8% 0.041 77.1 / 0.72);
-  --color-tape-lilac: oklch(77.8% 0.03 336.6 / 0.68);
+| Utility | Size | Line height / tracking | Use |
+|---|---|---|---|
+| `text-eyebrow` | 11px (12px via `md:text-xs`) | 1.4 / 0.24em | eyebrow labels |
+| `text-nav` | 13px | 1 / 0.14em | nav links |
+| `text-button` | 13px | 1 / 0.16em | buttons |
+| `text-small` | 14px | 1.5 | footer |
+| `text-copy` | 15px | 1.6 | card and step descriptions |
+| `text-lead` | 17px | 1.7 | body on mobile, process intro |
+| `text-lead-lg` | 18px | 1.7 | body on desktop |
 
-  /* type */
-  --font-serif: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
-  --font-sans: "Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+Other tokens: `font-serif` / `font-sans`; `max-w-page` (1320px), `max-w-sheet` (720px), `max-w-prose` (460px); shadows `shadow-print(-sm)`, `shadow-card(-sm)`, `shadow-float(-sm)`, `shadow-lift`, `shadow-sheet(-sm)`, always tinted with ink; easings `ease-soft`, `ease-bloom`; the `paper-grain` utility (paper colour + tiling grain from `resources/images/paper-grain.webp`). shadcn variables (`--background`, `--primary`, `--ring`, `--sidebar-*`, …) are mapped onto the palette in `:root` with `--radius: 0`. There is no `.dark` theme; the `dark:` variant is bound to a class that is never set.
 
-  --text-eyebrow: 0.6875rem;            /* 11px; 12px from md (see utilities) */
-  --text-eyebrow--letter-spacing: 0.24em;
-  --text-nav: 0.8125rem;                /* 13px */
-  --text-nav--letter-spacing: 0.14em;
-  --text-button: 0.8125rem;             /* 13px */
-  --text-button--letter-spacing: 0.16em;
-  --text-small: 0.875rem;               /* 14px */
-  --text-card: 0.9375rem;               /* 15px, card and step descriptions */
-  --text-card--line-height: 1.6;
-  --text-body: 1.0625rem;               /* 17px mobile */
-  --text-body--line-height: 1.7;
-  --text-body-lg: 1.125rem;             /* 18px desktop */
-  --text-body-lg--line-height: 1.7;
-
-  /* layout */
-  --container-page: 82.5rem;            /* 1320px */
-  --container-sheet: 45rem;             /* 720px, taped process card */
-  --container-prose: 28.75rem;          /* 460px, CTA paragraph */
-
-  /* shadows: always tinted with ink, never neutral black */
-  --shadow-print: 0 1px 0 var(--color-rule), 0 30px 60px -30px oklch(29.7% 0.053 338.3 / 0.35);
-  --shadow-card: 0 20px 40px -30px oklch(29.7% 0.053 338.3 / 0.40);
-  --shadow-card-sm: 0 16px 30px -24px oklch(29.7% 0.053 338.3 / 0.40);
-  --shadow-float: 0 18px 40px -24px oklch(29.7% 0.053 338.3 / 0.40);
-  --shadow-lift: 0 24px 40px -22px oklch(29.7% 0.053 338.3 / 0.50);
-  --shadow-sheet: 0 30px 60px -30px oklch(23% 0.036 340.2 / 0.45);
-
-  /* motion */
-  --ease-soft: cubic-bezier(0.3, 0.7, 0.2, 1);       /* hover lifts */
-  --ease-bloom: cubic-bezier(0.3, 1.5, 0.5, 1);      /* flower overshoot */
-  --radius-none: 0;
-}
-
-/* shadcn semantic variables mapped onto the palette */
-:root {
-  color-scheme: light;
-  --background: var(--color-paper);
-  --foreground: var(--color-ink);
-  --card: var(--color-paper-card);
-  --card-foreground: var(--color-ink);
-  --popover: var(--color-paper-card);
-  --popover-foreground: var(--color-ink);
-  --primary: var(--color-plum);
-  --primary-foreground: var(--color-paper);
-  --secondary: var(--color-paper-card);
-  --secondary-foreground: var(--color-plum);
-  --muted: var(--color-paper-card);
-  --muted-foreground: var(--color-text);
-  --accent: var(--color-bud);
-  --accent-foreground: var(--color-plum);
-  --destructive: oklch(50% 0.16 25);      /* form errors only */
-  --border: var(--color-rule);
-  --input: var(--color-rule-strong);
-  --ring: var(--color-plum);
-  --radius: 0rem;                          /* paper: square corners */
-}
-
-body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); font-weight: 300; }
-```
+`tailwind-merge` is extended in `resources/js/lib/utils.ts` with the custom font-size names; add new size tokens there too.
 
 Font weights in use: **Jost 300 (default body), 400, 500**; **Cormorant Garamond 400, 500 + italic 400, 500**.
 
@@ -329,7 +251,7 @@ All line art is **outline, round caps, 1.1–1.4px strokes, `currentColor`**, dr
 | `icon-chevron-left/right.svg` | Carousel arrows (16px in 44px circle) | plum |
 | `icon-heart.svg` | Footer "Made with ♥" (13×12) | heart |
 
-Import SVGs as React components (e.g. `vite-plugin-svgr`) so they inherit `currentColor` and the carousel parts can be animated.
+The `.svg` files are the source drawings; the site uses them as hand-written React components in `resources/js/components/site/icons.tsx` (so they inherit `currentColor` and accept classes). `vite-plugin-svgr` was dropped because it is incompatible with the project's Babel 8. The carousel bud and flower are drawn inline in `hero-carousel.tsx` so their parts can animate.
 
 Use **lucide-react** (ships with shadcn) only for generic UI inside the admin and forms (check, x, upload, trash). Do not use it on the public site's decorative elements.
 
@@ -342,6 +264,7 @@ Component names are suggestions. Each lists the mobile base first, then larger b
 ### 7.1 `SiteHeader`
 - **Mobile:** row with the tagline "Kvety pre váš veľký deň" (serif italic 16px, taupe-text) on the left and a 48px menu button (`icon-menu`) on the right, bottom hairline `rule`. The menu button opens a **shadcn `Sheet`** (side right, `paper` background with grain): nav links (Domov, Galéria, Kontakt) in serif 34px, plus Instagram/Facebook links and the "Napíšte nám" button. Focus trap, Esc closes it, and the current page is marked.
 - **lg:** three-column bar (`grid-cols-[1fr_auto_1fr]`, so the tagline is truly centred). Left: nav links (uppercase 13px / 0.14em, 36px gap, 1px bottom border on hover and active). Centre: tagline. Right: Instagram and Facebook icon links (44×44 hit area) + outline button "Napíšte nám" → `/kontakt`.
+- On every page other than the homepage the tagline slot shows the small wordmark (linking home) instead, so inner pages carry the brand; the homepage has the big logo right below.
 - Not sticky (by design). Optionally add a slim sticky version later.
 
 ### 7.2 `Logo` and `LogoHero`
@@ -373,7 +296,7 @@ Structure: photo print (see §5) + flower-stem control strip + decorative sprig 
   - Swipe on touch.
   - ← → keys when focused.
   - `prefers-reduced-motion`: no autoplay, no zoom, instant crossfade.
-- Implementation: shadcn **`Carousel`** (Embla) with the fade plugin (`embla-carousel-fade`) and `embla-carousel-autoplay`, *or* a small custom component. Either way the buds and strip are custom.
+- Implementation: a small custom component (`resources/js/components/home/hero-carousel.tsx`): stacked slides, CSS transitions, pointer-event swipe. No carousel library.
 - Images: first slide `fetchpriority="high"` and no lazy loading; others lazy. Use `srcset` from the media library responsive images (see `PRODUCT.md`, Images).
 
 ### 7.4 `IntroSection` ("O nás")
@@ -417,7 +340,7 @@ Structure: photo print (see §5) + flower-stem control strip + decorative sprig 
 - Top hairline `rule`.
 - Mobile: centred column: wordmark (34px high) → nav links (12px padding each) → credit line.
 - lg: one row, space-between: wordmark (40px) · nav (uppercase 13px) · credit.
-- Credit: `© {year} Euflorea · Made with [heart icon] by Legacy Upgrade` (link to https://legacy-upgrade.com/). 14px, muted. The heart is `icon-heart.svg` with `aria-label="love"`.
+- Credit: `© {year} Euflorea · Made with [heart icon] by Legacy Upgrade` (link to https://legacy-upgrade.com/). 14px, `muted-ink`. The heart is `icon-heart.svg` with `aria-label="love"`.
 
 ---
 
@@ -467,7 +390,7 @@ Initialise shadcn with the theme variables from §2 (radius 0). Components expec
 |---|---|
 | `Button` | everywhere (custom `outline` and `icon` variants as in §7.9) |
 | `Sheet` | mobile menu |
-| `Carousel` | hero carousel (Embla) and gallery lightbox, optional |
+| `embla-carousel-react` | gallery lightbox (swipe between photos) |
 | `Dialog` | lightbox container |
 | `Form`, `Input`, `Textarea`, `Select`, `Checkbox`, `Label`, `Calendar`/`Popover` (date) | contact form |
 | `Sonner` (toast) | form success and error |

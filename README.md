@@ -16,12 +16,13 @@ Website for Euflorea, a small Slovak wedding and floral styling studio. Couples 
 - Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (admin and form icons only); client-side rendering only (SSR off); light theme only
 - Laravel Fortify (auth, email verification routes, 2FA), Laravel Wayfinder (typed routes), Laravel Head (document head)
 - `spatie/laravel-data` (DTOs), `spatie/laravel-typescript-transformer` (TS codegen), `spatie/laravel-query-builder` (filtering/sorting), `spatie/laravel-permission` (installed, unused for now: no roles, any logged-in user can do everything)
-- Being added (see `PLAN.md`): `spatie/laravel-medialibrary` (photos and responsive variants), self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `vite-plugin-svgr` (line art as components), Embla (hero carousel)
+- Self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `embla-carousel-react` (lightbox swipe); being added (see `PLAN.md`): `spatie/laravel-medialibrary` (photos and responsive variants)
 
 ## Assets
 
 - `resources/images/brand/logo-plum.png` — working logo (wordmark + sprig, transparent). The tagline is rendered as text. `logo-original.jpg` is the client's original, reference only.
-- `resources/images/svg/` — hand-drawn line art and icons, imported as React components.
+- `resources/images/svg/` — source drawings of the line art and icons; used on the site as React components in `resources/js/components/site/icons.tsx`.
+- `resources/images/paper-grain.webp` — tiling paper grain; `resources/images/home/` — the "Ako to rastie" background in three WebP widths.
 - Photos are uploaded through the admin; the seeder imports the initial albums from `_handoff/photos/` when present.
 - Dev: Laravel Boost (AI guidelines + MCP), Laravel IDE Helper (model doc blocks), Debugbar, Checkpoint, Rapidlogin
 - Quality: Pest (feature + arch tests), Larastan with banned-code rules, Pint, Vite+ (`vp check`: oxlint + oxfmt)

@@ -42,6 +42,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'social' => [
+                'instagram' => config('site.instagram'),
+                'facebook' => config('site.facebook'),
+            ],
         ];
     }
 }

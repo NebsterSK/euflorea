@@ -183,7 +183,7 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 
 ## 11. Integrations
 
-- **Instagram** `https://www.instagram.com/euflorea_/` and **Facebook** (URL pending): outbound links only, no API or embeds.
+- **Instagram** `https://www.instagram.com/euflorea_/` and **Facebook** (URL pending): outbound links only, no API or embeds. Configured in `config/site.php` (`SITE_INSTAGRAM_URL`, `SITE_FACEBOOK_URL`); a profile without a URL is hidden everywhere rather than linking to `#`.
 - **Mail:** inquiry mails must work without a paid mail service (solution to be decided later). Inquiries are always stored in the DB first, so nothing is lost while mail is not set up.
 - **Storage:** spatie/laravel-medialibrary; WebP variants on the `public` disk, originals on a private disk; S3-compatible later if needed.
 - **Analytics:** none decided; if added, cookie-less (e.g. Plausible) to avoid a consent banner.

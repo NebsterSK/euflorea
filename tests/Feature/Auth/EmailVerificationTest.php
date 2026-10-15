@@ -21,7 +21,7 @@ test('email verification screen can be rendered', function () {
 test('unverified users are not blocked because email verification is not enforced', function () {
     $user = User::factory()->unverified()->create();
 
-    $response = $this->actingAs($user)->get(route('appearance.edit'));
+    $response = $this->actingAs($user)->get(route('profile.edit'));
 
     $response->assertOk();
 });
