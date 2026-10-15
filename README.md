@@ -1,4 +1,4 @@
-# Laravel template
+# Euflorea
 
 A starter template for personal Laravel apps — Laravel, Inertia, and React with typed routes and a ShadCN-based UI, based on the official Laravel React starter kit. Clone it as the baseline for a new project, then build features on top of the conventions below.
 
@@ -21,7 +21,7 @@ A starter template for personal Laravel apps — Laravel, Inertia, and React wit
 
 ## Local development
 
-Served by **lerd** at `https://template.test` (`.lerd.yaml`); lerd provides `php`, `composer`, `node` and `npm`. Requires Node 26+.
+Served by **lerd** at `https://euflorea.test` (`.lerd.yaml`); lerd provides `php`, `composer`, `node` and `npm`. Requires Node 26+.
 
 ```bash
 # first run
@@ -42,7 +42,7 @@ php artisan wayfinder:generate --with-form   # regenerate @/routes + @/actions (
 php artisan typescript:transform             # regenerate App.Data.* types
 composer models                              # regenerate model doc blocks (also runs on composer update)
 
-# tests (MySQL database `template_test`, see phpunit.xml)
+# tests (MySQL database `euflorea_test`, see phpunit.xml)
 php artisan test --compact
 
 # quality (run manually)

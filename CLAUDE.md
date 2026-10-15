@@ -1,4 +1,4 @@
-# Laravel template
+# Euflorea
 
 See `README.md` for project overview, stack, setup, and architecture.
 See `PRODUCT.md` for the product specification (users, features, domain, business rules) and `DESIGN.md` for the frontend design system; follow `DESIGN.md` for all UI work.
