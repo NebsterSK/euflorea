@@ -132,6 +132,12 @@ meta: string | null,
 description: string | null,
 photos: App.Data.Site.ImageData[],
 };
+export type ContactPersonData = {
+name: string,
+role: string | null,
+phone: string | null,
+email: string | null,
+};
 export type ImageData = {
 id: number,
 src: string,
@@ -141,6 +147,20 @@ height: number,
 alt: string,
 focalX: number,
 focalY: number,
+};
+export type InquiryInputData = {
+name: string,
+email: string,
+phone: string | null,
+weddingDate: string | null,
+dateUnknown: boolean,
+venue: string | null,
+guests: string | null,
+services: string[],
+message: string,
+isSpam: boolean,
+ip: string | null,
+userAgent: string | null,
 };
 }
 }

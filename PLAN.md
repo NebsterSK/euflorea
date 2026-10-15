@@ -75,11 +75,12 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 
 ## 5. Contact
 
-- [ ] Contact page layout (people cards, social cards, taped form sheet)
-- [ ] `ContactRequest` validation, honeypot, rate limit 5/hour/IP
-- [ ] Store inquiry in the DB (always, before any mail)
-- [ ] Queued mail to the studio (+ optional confirmation to the couple) without a paid mail service; decide how later
-- [ ] Success card + toast, inline errors + summary
+- [x] Contact page layout (people cards from `config/site.php`, social cards, taped form sheet)
+- [x] `ContactRequest` validation (Slovak messages), honeypot, rate limit 5/hour/IP
+- [x] Store inquiry in the DB (always, before any mail)
+- [x] Queued mails: `InquiryReceived` to `SITE_CONTACT_RECIPIENT` (reply-to the couple), optional `InquiryConfirmation` (`SITE_CONTACT_SEND_CONFIRMATION`)
+- [ ] Choose a free way of actually sending mail (no paid service) and set `MAIL_*`
+- [x] Success card + toast, inline errors + summary
 
 ## 6. Launch pass
 

@@ -22,4 +22,23 @@ return [
         'handle' => env('SITE_FACEBOOK_HANDLE', 'Euflorea'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact
+    |--------------------------------------------------------------------------
+    |
+    | `recipient`: where inquiry mails go; no mail is sent while it is empty
+    | (inquiries are always stored and visible in the admin).
+    | `send_confirmation`: also mail the couple a copy of their message.
+    | `people`: contact cards on the contact page, e.g.
+    |   ['name' => 'Jana', 'role' => 'Kvetinárka', 'phone' => '+421 900 000 000', 'email' => 'jana@euflorea.sk']
+    |
+    */
+
+    'contact' => [
+        'recipient' => env('SITE_CONTACT_RECIPIENT'),
+        'send_confirmation' => (bool) env('SITE_CONTACT_SEND_CONFIRMATION', false),
+        'people' => [],
+    ],
+
 ];
