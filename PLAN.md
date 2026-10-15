@@ -69,9 +69,9 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 
 ## 4. Gallery
 
-- [ ] Gallery index with album cards, empty state, optional type filter
-- [ ] Album page with masonry grid, next album link, CTA section, 404 for unpublished/unknown
-- [ ] Lightbox (keyboard, swipe, focus trap and return)
+- [x] Gallery index with album cards, empty state, type filter (shown when both types exist)
+- [x] Album page with masonry grid, next album link (wraps around), CTA section, 404 for unpublished/unknown/carousel
+- [x] Lightbox (Embla swipe, ← → Esc, focus trap and return to the opened photo)
 
 ## 5. Contact
 
@@ -96,6 +96,7 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 - [ ] Privacy policy page
 - [ ] SEO: titles, descriptions, canonical, OG image, `sitemap.xml`, `robots.txt`, JSON-LD `Florist`
 - [ ] Favicon from the dill sprig
+- [ ] Branded error pages (404, 500) in the Herbár style
 - [ ] Decide on Fortify registration (currently enabled; users are meant to be added manually)
 - [ ] Accessibility pass (axe/Lighthouse, AA) and performance pass (LCP < 2.5s on 4G)
 - [ ] Mobile check of every page at 390px
