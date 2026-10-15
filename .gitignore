@@ -1,0 +1,17 @@
+.env
+.phpunit.result.cache
+/.fleet
+/.idea
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
+/vendor
+/.claude/settings.local.json/.phpunit.cache
+/public/fonts-manifest.dev.json
+.env.before_lerd
