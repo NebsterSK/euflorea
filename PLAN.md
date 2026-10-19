@@ -33,11 +33,11 @@ Build order and progress for the Euflorea website. Specs live in `PRODUCT.md` (w
 
 ## 3. Data, media and admin
 
-- [x] Install and configure `spatie/laravel-medialibrary`: originals on a private disk, WebP-only responsive variants (quality ~82), EXIF stripped, orientation fixed, queued conversions (`AddPhotoToAlbum` cleans every source first)
+- [x] Install and configure `spatie/laravel-medialibrary`: originals on a private disk, WebP-only responsive variants (quality 90; originals JPEG 95, max 3000px), EXIF stripped, orientation fixed, queued conversions (`AddPhotoToAlbum` cleans every source first)
 - [x] Migrations, models, factories: `albums`, `photos`, `inquiries`
 - [x] Admin routes under `/admin` (auth), sidebar nav entries, Slovak admin screens
 - [x] Albums: list (cover, title, type, date, published, photo count, reorder), create/edit form, delete with confirm
-- [x] Photos: multi-upload with progress (downscaled in the browser to 3000px), reorder (drag + arrow buttons), alt text, focal point by tap with crop previews, set cover, delete
+- [x] Photos: multi-upload with progress (originals sent as they are, up to 25 MB), reorder (drag + arrow buttons), alt text, focal point by tap with crop previews, set cover, delete
 - [x] Homepage carousel album (`is_homepage_carousel`, only one)
 - [x] Inquiries list with "handled" switch
 - [x] `photos:import {path}` artisan command (manifest `database/data/initial-albums.json`): creates the albums and carousel album below through the same media pipeline as admin uploads; idempotent (skips existing slugs). Locally run on `_handoff/photos`
@@ -93,7 +93,7 @@ Notes: `uvod/4.jpeg` is only 900×1600 with no full-size copy; we use it anyway 
 
 ### Everything else
 
-- [x] Privacy policy page (generic GDPR text; operator details from `SITE_OPERATOR_*`; client must review)
+- [x] Privacy policy page (generic GDPR text; operator details from `GDPR_OPERATOR_*`; client must review)
 - [x] SEO: server-rendered titles, descriptions, canonical, Open Graph / Twitter (laravel/head, mirrored client-side by `ServerHead`), OG image `public/og-image.jpg`, `sitemap.xml`, `robots.txt` (closed outside production), JSON-LD `Florist`
 - [x] Favicon from the dill sprig (`favicon.svg`, `favicon.ico`, `apple-touch-icon.png`; redo from the vector logo later)
 - [x] Branded error pages (403, 404, 500, 503) in the Herbár style (server errors only when `APP_DEBUG=false`)

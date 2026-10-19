@@ -13,7 +13,7 @@ Website for Euflorea, a small Slovak wedding and floral styling studio. Couples 
 ## Stack
 
 - PHP 8.5, Laravel 13, MySQL
-- Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (admin and form icons only); client-side rendering only (SSR off); light theme only
+- Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (admin and form icons only); client-side rendering only (SSR off: `inertia({ ssr: false })` in `vite.config.ts` and `INERTIA_SSR_ENABLED=false`); light theme only
 - Laravel Fortify (auth, email verification routes, 2FA), Laravel Wayfinder (typed routes), Laravel Head (document head)
 - `spatie/laravel-data` (DTOs), `spatie/laravel-typescript-transformer` (TS codegen), `spatie/laravel-query-builder` (filtering/sorting), `spatie/laravel-permission` (installed, unused for now: no roles, any logged-in user can do everything)
 - Self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `embla-carousel-react` (lightbox swipe); being added (see `PLAN.md`): `spatie/laravel-medialibrary` (photos and responsive variants)
@@ -65,7 +65,7 @@ npm run types:check          # tsc
 ## Photos
 
 - Every photo (admin upload or `php artisan photos:import {path}`) goes through `App\Actions\Albums\AddPhotoToAlbum`: EXIF orientation applied, metadata stripped, long edge capped at 3000px, stored as the private original on the `originals` disk (`storage/app/originals`). The media library then writes WebP conversions (`web` with responsive widths, `thumb` for the admin) to the `public` disk. Conversions are queued: run a queue worker in production (`QUEUE_CONNECTION=sync` locally runs them inline).
-- The admin downscales large photos in the browser before upload, so uploads stay around 1–3 MB. PHP still needs `upload_max_filesize` / `post_max_size` above that (lerd's default is 2M / 8M; raise them in `~/.local/share/lerd/php/8.5/98-user.ini` and on the server, e.g. 20M / 25M).
+- The admin uploads photos as they are (up to 25 MB each), so PHP needs `upload_max_filesize` / `post_max_size` of at least 25M / 30M (lerd's default is 2M / 8M; set in `~/.local/share/lerd/php/8.5/98-user.ini`, and on the server).
 - Initial content: `php artisan photos:import _handoff/photos` (manifest in `database/data/initial-albums.json`, safe to re-run). See `PLAN.md` for the one-time production flow.
 
 ## SEO and head
@@ -74,7 +74,7 @@ Controllers describe the page with `laravel/head` (`Head::title('Galéria')->des
 
 ## Configuration
 
-`config/site.php` (env `SITE_*`): Instagram/Facebook URLs (a profile without a URL is hidden), contact people, inquiry recipient and confirmation mail, and the data controller shown on the privacy page.
+`config/site.php`: Instagram/Facebook URLs (`SITE_INSTAGRAM_*`, `SITE_FACEBOOK_*`; a profile without a URL is hidden), contact people, inquiry recipient and confirmation mail (`SITE_CONTACT_*`), and the data controller shown on the privacy page (`GDPR_OPERATOR_NAME`, `_ADDRESS`, `_COMPANY_ID`, `_EMAIL`).
 
 ## Architecture
 

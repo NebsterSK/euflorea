@@ -28,50 +28,12 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
-/** Longest edge sent to the server; matches the stored original. */
-const maxUploadEdge = 3000;
-
 type Upload = {
     key: string;
     name: string;
     progress: number;
     status: 'waiting' | 'uploading' | 'done' | 'failed';
 };
-
-/**
- * Downscale big photos in the browser before upload (faster on phones,
- * stays under upload limits). Orientation is applied, metadata dropped.
- */
-async function prepareForUpload(file: File): Promise<File> {
-    const bitmap = await createImageBitmap(file, {
-        imageOrientation: 'from-image',
-    });
-    const scale = Math.min(1, maxUploadEdge / Math.max(bitmap.width, bitmap.height));
-
-    if (scale === 1 && file.size < 8 * 1024 * 1024) {
-        bitmap.close();
-
-        return file;
-    }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, 'image/jpeg', 0.92),
-    );
-
-    if (!blob) {
-        return file;
-    }
-
-    return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', {
-        type: 'image/jpeg',
-    });
-}
 
 export function PhotoManager({
     album,
@@ -110,12 +72,10 @@ export function PhotoManager({
             const { key } = queued[position];
             updateUpload(key, { status: 'uploading' });
 
-            const prepared = await prepareForUpload(file).catch(() => file);
-
             await new Promise<void>((resolve) => {
                 router.post(
                     PhotoController.store.url(album.id),
-                    { photo: prepared },
+                    { photo: file },
                     {
                         forceFormData: true,
                         preserveScroll: true,
@@ -208,7 +168,7 @@ export function PhotoManager({
                 <p className="text-sm text-muted-foreground">
                     Pretiahnite sem fotky alebo ich vyberte zo zariadenia.
                     <br />
-                    JPG, PNG alebo WebP. Veľké fotky sa pred nahratím zmenšia.
+                    JPG, PNG alebo WebP, najviac 25 MB na fotku.
                 </p>
                 <Button
                     type="button"

@@ -33,10 +33,10 @@ return [
     */
 
     'operator' => [
-        'name' => env('SITE_OPERATOR_NAME'),
-        'address' => env('SITE_OPERATOR_ADDRESS'),
-        'company_id' => env('SITE_OPERATOR_COMPANY_ID'),
-        'email' => env('SITE_OPERATOR_EMAIL'),
+        'name' => env('GDPR_OPERATOR_NAME'),
+        'address' => env('GDPR_OPERATOR_ADDRESS'),
+        'company_id' => env('GDPR_OPERATOR_COMPANY_ID'),
+        'email' => env('GDPR_OPERATOR_EMAIL'),
     ],
 
     /*

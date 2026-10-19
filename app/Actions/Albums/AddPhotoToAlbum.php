@@ -78,7 +78,7 @@ class AddPhotoToAlbum
         }
 
         $image->setImageFormat('jpeg');
-        $image->setImageCompressionQuality(92);
+        $image->setImageCompressionQuality(95);
         $image->setOption('jpeg:sampling-factor', '4:4:4');
 
         $cleanPath = tempnam(sys_get_temp_dir(), 'photo-');

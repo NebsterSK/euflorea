@@ -7,6 +7,21 @@ import { buttonVariants } from '@/components/ui/button';
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils';
 
+/**
+ * `sizes` for a contained photo: it is limited by the free width or by the
+ * free height × its aspect ratio, whichever is smaller, so a portrait photo
+ * on a wide screen doesn't download the full-width file. The subtracted
+ * values are the top bar, arrows and padding (slightly under-estimated).
+ */
+function lightboxSizes(photo: App.Data.Site.ImageData): string {
+    const aspect = (photo.width / photo.height).toFixed(3);
+
+    return [
+        `(min-width: 1024px) min(100vw - 192px, (100vh - 120px) * ${aspect})`,
+        `min(100vw - 32px, (100vh - 150px) * ${aspect})`,
+    ].join(', ');
+}
+
 const arrowClassName = cn(
     buttonVariants({ variant: 'paper', size: 'round' }),
     'bg-paper-card',
@@ -116,7 +131,7 @@ export function Lightbox({
                                     <img
                                         src={photo.src}
                                         srcSet={photo.srcset}
-                                        sizes="100vw"
+                                        sizes={lightboxSizes(photo)}
                                         width={photo.width}
                                         height={photo.height}
                                         alt={photo.alt}

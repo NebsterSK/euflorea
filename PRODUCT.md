@@ -44,18 +44,22 @@ The studio has no website, only Facebook and Instagram ([@euflorea_](https://www
 
 | Module | Feature | Priority | Status |
 | --- | --- | --- | --- |
-| Public | Homepage: logo hero, photo carousel, intro, services, process, CTA + socials | Must | planned |
-| Public | Gallery: album list with optional Svadby / Editoriály filter | Must | planned |
-| Public | Album page: photo grid + lightbox, next album, CTA | Must | planned |
-| Public | Contact: contact people, big social cards, inquiry form | Must | planned |
-| Public | Privacy policy page (GDPR, needed for the form) | Must | planned |
-| Public | SEO: titles, meta descriptions, OG image, sitemap, robots, JSON-LD | Should | planned |
-| Admin | Albums CRUD with publish toggle and reordering | Must | planned |
-| Admin | Photos: multi-upload with progress, reorder, alt text, focal point, set cover, delete | Must | planned |
-| Admin | Homepage carousel managed as a flagged album | Should | planned |
-| Admin | Inquiries: read-only list with "handled" checkbox | Could | planned |
-| Auth | Login, password reset, email verification, 2FA (Fortify, starter kit) | Must | done |
-| Settings | Profile, password and 2FA | Must | done |
+| Public | Homepage: logo hero, photo carousel, intro, services, process, CTA + socials | Must | done |
+| Public | Gallery: album list with Svadby / Editoriály filter | Must | done |
+| Public | Album page: photo grid + lightbox, next album, CTA | Must | done |
+| Public | Contact: contact people, big social cards, inquiry form | Must | done (people and Facebook wait for client data) |
+| Public | Inquiry mails to the studio and optional copy to the couple | Must | done in code; sending needs a mail setup (`MAIL_*`, `SITE_CONTACT_RECIPIENT`) |
+| Public | Privacy policy page (GDPR, needed for the form) | Must | done (draft text, client to review) |
+| Public | SEO: titles, meta descriptions, OG image, sitemap, robots, JSON-LD | Should | done |
+| Public | Branded error pages (403, 404, 500, 503) | Should | done |
+| Admin | Overview with counts and shortcuts | Should | done |
+| Admin | Albums CRUD with publish toggle and reordering | Must | done |
+| Admin | Photos: multi-upload with progress, reorder, alt text, focal point, set cover, delete | Must | done |
+| Admin | Homepage carousel managed as a flagged album | Should | done |
+| Admin | Inquiries: list with "handled" switch | Could | done |
+| Content | `photos:import` for the initial albums and carousel | Must | done (production run pending) |
+| Auth | Login, password reset, email verification, 2FA (Fortify, starter kit), in Slovak | Must | done |
+| Settings | Profile, password and 2FA, in Slovak | Must | done |
 
 ## 6. Pages and routes
 
@@ -63,12 +67,15 @@ Slovak slugs, no trailing slashes. Shared layout: `SiteHeader` + `SiteFooter`; t
 
 | Route | Name | Page |
 | --- | --- | --- |
-| `GET /` | `home` | Domov |
+| `GET /` | `index` | Domov |
 | `GET /galeria` | `gallery.index` | Galéria: album list |
-| `GET /galeria/{album:slug}` | `gallery.show` | One album |
+| `GET /galeria/{slug}` | `gallery.show` | One album |
 | `GET /kontakt` | `contact` | Kontakt |
 | `POST /kontakt` | `contact.send` | Inquiry form submit |
 | `GET /ochrana-osobnych-udajov` | `privacy` | Privacy policy |
+| `GET /robots.txt` | `robots` | Closed outside production |
+| `GET /sitemap.xml` | `sitemap` | Public pages and published albums |
+| `GET /admin` | `dashboard` | Admin overview (auth required) |
 | `/admin/*` | `admin.*` | Admin (auth required) |
 
 ### Homepage (`/`)
@@ -94,9 +101,9 @@ Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in ord
 
 ### Gallery (`/galeria`)
 
-- Intro: eyebrow "Galéria" → "Naše *svadby*" → "Každá svadba je iná. Pozrite sa, ako sme ich oblečili do kvetov." (copy to confirm).
+- Intro: eyebrow "Galéria" → "Naše *svadby*" → "Každá svadba je iná. Pozrite sa, ako sme ich obliekli do kvetov." (copy to confirm).
 - Published albums only, as photo-print cards (cover, title, meta line: date or season · location). Order: `sort_order` asc, then `wedding_date` desc.
-- Filter "Všetko" / "Svadby" / "Editoriály" by album `type`. Optional for v1.
+- Filter "Všetko" / "Svadby" / "Editoriály" by album `type`, shown only when both types exist.
 - Empty state: "Čoskoro tu pribudnú naše svadby." + Instagram link.
 
 ### Album (`/galeria/{slug}`)
@@ -104,23 +111,23 @@ Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in ord
 - Back link "← Všetky svadby", type eyebrow (Svadba / Editorial), title, meta line, optional description.
 - Photo grid (masonry columns), lazy load all but the first 3.
 - Lightbox: prev/next, counter "3 / 14", close "Zavrieť", keyboard (← → Esc), swipe, focus trap, focus returns to the clicked photo.
-- "Ďalšia svadba →" to the next album, then the homepage CTA section.
+- "Ďalší album" link to the next album in gallery order (wraps around to the first), then the homepage CTA section.
 - **404** for unknown or unpublished slugs. The homepage carousel album is never listed or reachable here.
 
 ### Contact (`/kontakt`)
 
 1. Intro: eyebrow "Kontakt" → "Plánujete *svadbu*?" → "Napíšte nám termín a miesto a ozveme sa do dvoch dní."
-2. Contact people: name, role, phone (`tel:`), email (`mailto:`). Data pending from the client.
+2. Contact people: name, role, phone (`tel:`), email (`mailto:`), from `config/site.php` → `contact.people`. Hidden while the list is empty; data pending from the client.
 3. Instagram and Facebook cards, **big and prominent** (client requirement).
 4. Inquiry form on a taped paper sheet.
 
 | Field | Label | Type | Required | Validation |
 | --- | --- | --- | --- | --- |
 | `name` | Meno a priezvisko | text | yes | max 120 |
-| `email` | E-mail | email | yes | `email:rfc,dns` |
+| `email` | E-mail | email | yes | `email:rfc,dns` in production, `email:rfc` elsewhere |
 | `phone` | Telefón | tel | | max 30 |
 | `wedding_date` | Dátum svadby | date picker | yes, unless `date_unknown` | today or later |
-| `date_unknown` | Neviem presne | checkbox | | makes `wedding_date` optional |
+| `date_unknown` | Dátum ešte nevieme presne | checkbox | | makes `wedding_date` optional |
 | `venue` | Miesto svadby | text | | max 160 |
 | `guests` | Približný počet hostí | select: do 30 / 30 až 60 / 60 až 100 / 100 až 150 / viac ako 150 | | in list |
 | `services[]` | Čo vás zaujíma | checkbox chips: the 4 services | | subset of list |
@@ -130,9 +137,9 @@ Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in ord
 
 ## 7. Key user flows
 
-**Couple sends an inquiry:** opens Kontakt (from header, CTA or menu) → fills the form → submits. On success the form is replaced with a thank-you card and a toast; the inquiry is stored and a mail is queued to the studio (plus an optional confirmation to the couple). On validation errors: inline messages under fields and a summary for screen readers; input is kept. When rate limited: an error toast, nothing stored. A filled honeypot is silently accepted and dropped.
+**Couple sends an inquiry:** opens Kontakt (from header, CTA or menu) → fills the form → submits. On success the form is replaced with a thank-you card and a toast; the inquiry is stored and a mail is queued to the studio (plus an optional confirmation to the couple). On validation errors: inline messages under fields and a summary for screen readers; input is kept. When rate limited (6th message within an hour from one IP): an error in the form summary, nothing stored. A filled honeypot is silently accepted and dropped.
 
-**Studio publishes a wedding:** logs in → Admin → new album (title, slug auto from title, type, date, location, description) → uploads photos (drag and drop or picker, progress per file) → orders them, writes alt text, taps each thumbnail to set its focal point, picks the cover → toggles Published. The album appears in the Gallery. Responsive image variants are generated on the queue; until they exist the original is never served (the photo is skipped or shown as a placeholder in admin).
+**Studio publishes a wedding:** logs in → Admin → new album (title, slug auto from title, type, date, location, description) → uploads photos (drag and drop or picker, progress per file) → orders them, writes alt text, taps each thumbnail to set its focal point, picks the cover → toggles Published. The album appears in the Gallery. Photos are uploaded as they are (up to 25 MB). Responsive WebP variants are generated on the queue; until they exist the photo is left out of the public pages and shows "Spracúva sa…" in the admin. The original is never served.
 
 **Studio swaps carousel photos:** edits the homepage carousel album like any other album; order and focal points drive the hero.
 
@@ -176,8 +183,8 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 
 | Trigger | Recipient | Channel | Content |
 | --- | --- | --- | --- |
-| Inquiry submitted | Studio (recipient address pending) | Mail, queued | All form fields, reply-to the couple |
-| Inquiry submitted (optional) | The couple | Mail, queued | Thank you + copy of their message |
+| Inquiry submitted | Studio (`SITE_CONTACT_RECIPIENT`; nothing is sent while empty) | Mail, queued | All form fields, reply-to the couple |
+| Inquiry submitted (when `SITE_CONTACT_SEND_CONFIRMATION=true`) | The couple | Mail, queued | Thank you + copy of their message |
 | Inquiry submitted | Visitor | Sonner toast + success card | "Ďakujeme! Ozveme sa vám do dvoch dní." |
 | Admin save / delete / upload | Admin user | Sonner toast via flash | Success or error |
 
@@ -193,7 +200,7 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 - **Language:** website Slovak only (`<html lang="sk">`); code, comments and docs in English. Time zone Europe/Bratislava.
 - **Devices:** mobile first, verified at 390px; no horizontal overflow, ≥44px touch targets, no drag-only interactions.
 - **Rendering:** client-side Inertia, no SSR. Controllers set the page title, description and share image with `laravel/head` (`Head::title()`…); the tags are in the initial HTML for crawlers and link previews, and `ServerHead` keeps them in sync after client-side navigation. Defaults (title suffix, Open Graph, icons, `noindex` outside production) live in `AppServiceProvider::configureHead()`.
-- **Images:** every photo (initial import and admin uploads alike) goes through one `spatie/laravel-medialibrary` pipeline. The uploaded original is stored on a **private** disk, never served, and kept only to regenerate variants. The site serves **WebP only** (quality ~82, a balance of quality and fast loads) in responsive widths (e.g. 480, 800, 1200, 1800, 2400), EXIF stripped (GPS) and orientation respected, generated on the queue (a queue worker must run). No AVIF or JPEG fallback. Render with `srcset` + `sizes`, explicit `width`/`height`, lazy loading except above the fold, focal point → `object-position: {focal_x}% {focal_y}%`. Hero first slide `fetchpriority="high"`.
+- **Images:** every photo (initial import and admin uploads alike) goes through one `spatie/laravel-medialibrary` pipeline. The cleaned original (JPEG quality 95, long edge max 3000px) is stored on a **private** disk, never served, and kept only to regenerate variants. The site serves **WebP only** (quality 90, max 2400px) in responsive widths, EXIF stripped (GPS) and orientation respected, generated on the queue (a queue worker must run). No AVIF or JPEG fallback. Render with `srcset` + `sizes`, explicit `width`/`height`, lazy loading except above the fold, focal point → `object-position: {focal_x}% {focal_y}%`. Hero first slide `fetchpriority="high"`.
 - **Initial content:** photos are content, not code; the database plus storage is their source of truth and must be in server backups. The initial albums are loaded by an idempotent `photos:import {path}` artisan command (skips albums whose slug exists) that uses the same pipeline as admin uploads. See `PLAN.md` for the one-time production flow.
 - **Performance:** homepage LCP under 2.5s on 4G (the hero carousel image is the LCP).
 - **Accessibility:** WCAG 2.2 AA, see `DESIGN.md` §10.

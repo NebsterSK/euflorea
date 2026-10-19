@@ -7,7 +7,7 @@ Source of truth, in order of priority:
 2. `_handoff/reference/home-desktop.html` and `_handoff/reference/home-mobile.html`: the exact approved homepage markup with every pixel value (local only, `_handoff/` is gitignored; open in a browser)
 3. `_handoff/screenshots/`: what the homepage must look like (desktop 1440 and 1920, mobile 390)
 
-The reference HTML is a **design export, not production code**. Rebuild it as React components with Tailwind tokens. Do not copy inline styles. Only the homepage is visually designed; Gallery, Album and Contact are specified in `PRODUCT.md` and are built from this system, reusing homepage components wherever possible.
+The reference HTML is a **design export, not production code**. Rebuild it as React components with Tailwind tokens. Do not copy inline styles. Only the homepage has an approved design comp. Gallery, Album, Contact, Privacy and the error pages had no comp; they are built from this system (see §12–13), reusing homepage components.
 
 Assets in the repo:
 - `resources/images/brand/logo-plum.png`: working logo (wordmark + dill sprig, plum on transparent, 891×249). The tagline is **not** part of the image (see §7.2).
@@ -325,7 +325,7 @@ Structure: photo print (see §5) + flower-stem control strip + decorative sprig 
 - **Instagram:** plum background, cream text, blush label, rotate −1°. **Facebook:** `paper-card`, `1px rule-strong` border, plum text, rose-text label, rotate +0.6°.
 - Padding 24px (mobile) / 30px 34px (desktop).
 - **Hover + focus-visible:** the tilt flips (IG → +0.6°, FB → −0.8°), card lifts (`translateY(-4px) scale(1.012)`), `shadow-lift` appears, icon rotates −8°, arrow slides 8px right. Duration 0.5s, `--ease-soft`.
-- Links: Instagram `https://www.instagram.com/euflorea_/`; Facebook URL is an open item.
+- Links come from `config/site.php` (`SITE_INSTAGRAM_URL`, `SITE_FACEBOOK_URL`). A card without a URL is not rendered; the Facebook URL is still an open item, so only the Instagram card shows for now.
 
 ### 7.9 `Button` (shadcn `Button`, custom variants)
 - `outline` (default on this site): transparent, `1px solid plum`, plum text, uppercase 13px / 0.14–0.16em, square corners, padding 13px 24px (header) / 17–18px 24–34px (CTA). Hover: fill plum, text paper (0.25s).
@@ -402,7 +402,7 @@ Add a variant in the `components/ui` file (`cva`) instead of overriding with `cl
 
 ---
 
-## 12. Gallery, Album and Contact (not visually designed)
+## 12. Gallery, Album and Contact (built without a comp)
 
 Build from the homepage parts. Behaviour and content are in `PRODUCT.md`; visual rules:
 
@@ -410,9 +410,9 @@ Build from the homepage parts. Behaviour and content are in `PRODUCT.md`; visual
 - **Album card** (Gallery): a photo print. Cover (4:5, focal point) on a `paper-card` mat (padding 10–12px), one tape strip, rotation cycling −0.8° · +0.6° · −0.4° · +0.9°. Inside the mat under the photo: title serif 24–28px, meta line in eyebrow style. The whole card is one link. Hover / focus-visible: straighten to 0°, lift 4px, `shadow-lift`. Grid 1 → `md` 2 → `xl` 3 columns, gap 28–40px.
 - **Filter tabs** (optional): "Všetko" / "Svadby" / "Editoriály", styled like the desktop nav.
 - **Empty state**: paper card with the sprig, "Čoskoro tu pribudnú naše svadby." and an Instagram link.
-- **Album page**: back link "← Všetky svadby" (serif link style), eyebrow (Svadba / Editorial), display title, meta line, optional description (body-lg, max 60ch). Photos in CSS columns 1 → `md` 2 → `lg` 3, gap 16–24px, **not rotated**, thin paper mat (6–8px) with `shadow-card-sm`. Then "Ďalšia svadba →" and the homepage `CtaSection`.
-- **Lightbox**: full screen, paper at 96%, photo contained; carousel-style round arrow buttons, counter "3 / 14", "Zavrieť" top right. Optionally the bud indicator as the counter for ≤ 16 photos.
-- **Contact**: contact-person paper cards, the two `SocialCard`s (full width on mobile, side by side from `md`), and the form on a taped sheet (same component as "Ako to rastie", max 720px). On `lg` either two columns (info + socials left, form right) or the form centred below, whichever reads cleaner.
+- **Album page**: back link "← Všetky svadby" (serif link style), eyebrow (Svadba / Editorial), display title, meta line, optional description (body-lg, max 60ch). Photos in CSS columns 1 → `md` 2 → `lg` 3, gap 16–24px, **not rotated**, thin paper mat (6–8px) with `shadow-card-sm`. Then a "Ďalší album" block under a hairline (eyebrow + serif italic title link with →, right-aligned) and the homepage `CtaSection`.
+- **Lightbox**: full screen, paper at 96%, photo contained; carousel-style round arrow buttons, counter "3 / 14", "Zavrieť" top right. Photos sit on a thin paper mat. On mobile the arrows sit below the photo, on desktop at the sides. (The bud indicator as counter was optional and is not built.)
+- **Contact**: contact-person paper cards, the two `SocialCard`s (full width on mobile, side by side from `md`), and the form on a taped sheet (same component as "Ako to rastie", max 720px). On `lg` two columns (5/7): intro, people and socials left, form right. The form sheet is kept straight (no tilt) so the fields stay level; the tape strips carry the paper feel.
 - **Form**: inline errors under each field (destructive, 14px) plus a screen-reader summary at the top. Submit is the outline button, full width on mobile, "Odoslať správu" / "Odosielam…". Success replaces the form with a paper card (sprig + "Ďakujeme! Ozveme sa vám do dvoch dní.") and a Sonner toast.
 
 ## 13. Error and legal pages

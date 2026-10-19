@@ -21,7 +21,7 @@ See `PRODUCT.md` for the product specification (users, features, domain, busines
 
 ## Git
 
-- Don't run `git add` / `stage` / `stash` / `commit` / `push` (or variants) unless explicitly asked.
+- Don't run `git add` / `stage` / `commit` / `push` (or variants) unless explicitly asked.
 
 ===
 

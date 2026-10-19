@@ -108,7 +108,7 @@ class Photo extends Model implements HasMedia
         $this->addMediaConversion('web')
             ->fit(Fit::Max, 2400, 2400)
             ->format('webp')
-            ->quality(82)
+            ->quality(90)
             ->withResponsiveImages()
             ->nonOptimized()
             ->performOnCollections(self::Collection);

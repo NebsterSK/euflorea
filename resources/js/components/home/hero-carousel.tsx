@@ -12,6 +12,24 @@ import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils';
 
 const autoplayDelay = 5500;
+
+/**
+ * `sizes` for a slide in the cover-cropped frame: the image is shown at the
+ * larger of the frame width and frame height × its aspect ratio, so a
+ * landscape photo in the tall phone frame needs a much wider file than the
+ * frame itself. Frame: 440 / 540 / 640px tall; width is the viewport minus
+ * gutters and the paper mat (max 1200px on desktop).
+ */
+function slideSizes(slide: App.Data.Site.ImageData): string {
+    const aspect = slide.width / slide.height;
+    const atHeight = (height: number) => `${Math.ceil(height * aspect)}px`;
+
+    return [
+        `(min-width: 1024px) max(min(100vw - 120px, 1200px), ${atHeight(640)})`,
+        `(min-width: 768px) max(100vw - 52px, ${atHeight(540)})`,
+        `max(100vw - 52px, ${atHeight(440)})`,
+    ].join(', ');
+}
 const swipeThreshold = 40;
 
 const arrowClassName = cn(
@@ -22,12 +40,18 @@ const arrowClassName = cn(
 /**
  * Homepage photo print with the approved flower-stem controls: one bud per
  * slide, the active one blooms. Crossfade + slow zoom-out, autoplay that
- * pauses on hover and focus, swipe and arrow keys.
+ * pauses while a mouse rests on the controls or keyboard focus is inside,
+ * swipe and arrow keys.
  */
 export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) {
     const [current, setCurrent] = useState(0);
     const [hasPainted, setHasPainted] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
+    // Two separate reasons to pause, so one ending never cancels the other.
+    // Taps and clicks never pause: a clicked button keeps focus, and touch
+    // devices emulate a hover that never ends, which used to stop autoplay.
+    const [isHoveringControls, setIsHoveringControls] = useState(false);
+    const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false);
+    const isPaused = isHoveringControls || hasKeyboardFocus;
     const [isManual, setIsManual] = useState(false);
     const reducedMotion = usePrefersReducedMotion();
     const swipeStart = useRef<number | null>(null);
@@ -105,12 +129,12 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
             aria-roledescription="carousel"
             aria-label="Naše svadby"
             onKeyDown={handleKeyDown}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onFocus={() => setIsPaused(true)}
+            onFocus={(event) =>
+                setHasKeyboardFocus(event.target.matches(':focus-visible'))
+            }
             onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
-                    setIsPaused(false);
+                    setHasKeyboardFocus(false);
                 }
             }}
             className="relative mx-auto max-w-page px-4 pt-9 lg:px-10 lg:pt-14 lg:pb-10"
@@ -131,7 +155,7 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
                                 key={slide.src}
                                 src={slide.src}
                                 srcSet={slide.srcset}
-                                sizes="(min-width: 1320px) 1240px, calc(100vw - 52px)"
+                                sizes={slideSizes(slide)}
                                 width={slide.width}
                                 height={slide.height}
                                 alt={slide.alt}
@@ -167,7 +191,12 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
             />
 
             {count > 1 && (
-                <div className="relative mx-auto -mt-8.5 flex w-fit -rotate-1 items-center gap-1.5 border border-rule-strong bg-paper-card px-2.5 pt-3 pb-2 shadow-float-sm lg:absolute lg:right-22 lg:-bottom-2 lg:mt-0 lg:rotate-[1.2deg] lg:gap-3 lg:px-4.5 lg:pt-3.5 lg:pb-2.5 lg:shadow-float">
+                <div
+                    onPointerEnter={(event) =>
+                        event.pointerType === 'mouse' && setIsHoveringControls(true)
+                    }
+                    onPointerLeave={() => setIsHoveringControls(false)}
+                    className="relative mx-auto -mt-8.5 flex w-fit -rotate-1 items-center gap-1.5 border border-rule-strong bg-paper-card px-2.5 pt-3 pb-2 shadow-float-sm lg:absolute lg:right-22 lg:-bottom-2 lg:mt-0 lg:rotate-[1.2deg] lg:gap-3 lg:px-4.5 lg:pt-3.5 lg:pb-2.5 lg:shadow-float">
                     <Tape className="-top-3.25 left-1/2 h-6.5 w-23 -translate-x-1/2 -rotate-3" />
                     <button
                         type="button"
