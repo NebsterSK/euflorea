@@ -6,7 +6,11 @@ import type { SVGAttributes } from 'react';
  */
 export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
     return (
-        <svg {...props} viewBox="0 20 120 240" xmlns="http://www.w3.org/2000/svg">
+        <svg
+            {...props}
+            viewBox="0 20 120 240"
+            xmlns="http://www.w3.org/2000/svg"
+        >
             <g
                 fill="none"
                 stroke="currentColor"

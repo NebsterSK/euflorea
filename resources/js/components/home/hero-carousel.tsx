@@ -43,7 +43,11 @@ const arrowClassName = cn(
  * pauses while a mouse rests on the controls or keyboard focus is inside,
  * swipe and arrow keys.
  */
-export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) {
+export function HeroCarousel({
+    slides,
+}: {
+    slides: App.Data.Site.ImageData[];
+}) {
     const [current, setCurrent] = useState(0);
     const [hasPainted, setHasPainted] = useState(false);
     // Two separate reasons to pause, so one ending never cancels the other.
@@ -56,6 +60,40 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
     const reducedMotion = usePrefersReducedMotion();
     const swipeStart = useRef<number | null>(null);
     const count = slides.length;
+    // Only the current slide and its neighbours get a src, so hidden slides
+    // don't compete with the first paint; once loaded, a slide keeps its src.
+    const [loadedSlides, setLoadedSlides] = useState<Set<number>>(
+        () =>
+            new Set([
+                0,
+                1 % Math.max(count, 1),
+                (count - 1 + count) % Math.max(count, 1),
+            ]),
+    );
+    const isNearCurrent = (index: number) =>
+        index === current ||
+        index === (current + 1) % count ||
+        index === (current - 1 + count) % count;
+
+    useEffect(() => {
+        if (count === 0) {
+            return;
+        }
+
+        setLoadedSlides((previous) => {
+            const neighbours = [
+                current,
+                (current + 1) % count,
+                (current - 1 + count) % count,
+            ];
+
+            if (neighbours.every((index) => previous.has(index))) {
+                return previous;
+            }
+
+            return new Set([...previous, ...neighbours]);
+        });
+    }, [current, count]);
 
     // The active slide only zooms when its scale changes: start at 1.06 and
     // flip to 1 after the first paint, or the first slide sits still.
@@ -124,6 +162,10 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
         }
     };
 
+    if (count === 0) {
+        return null;
+    }
+
     return (
         <section
             aria-roledescription="carousel"
@@ -149,12 +191,14 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
                 >
                     {slides.map((slide, index) => {
                         const isActive = index === current;
+                        const shouldLoad =
+                            loadedSlides.has(index) || isNearCurrent(index);
 
                         return (
                             <img
-                                key={slide.src}
-                                src={slide.src}
-                                srcSet={slide.srcset}
+                                key={slide.id}
+                                src={shouldLoad ? slide.src : undefined}
+                                srcSet={shouldLoad ? slide.srcset : undefined}
                                 sizes={slideSizes(slide)}
                                 width={slide.width}
                                 height={slide.height}
@@ -193,10 +237,12 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
             {count > 1 && (
                 <div
                     onPointerEnter={(event) =>
-                        event.pointerType === 'mouse' && setIsHoveringControls(true)
+                        event.pointerType === 'mouse' &&
+                        setIsHoveringControls(true)
                     }
                     onPointerLeave={() => setIsHoveringControls(false)}
-                    className="relative mx-auto -mt-8.5 flex w-fit -rotate-1 items-center gap-1.5 border border-rule-strong bg-paper-card px-2.5 pt-3 pb-2 shadow-float-sm lg:absolute lg:right-22 lg:-bottom-2 lg:mt-0 lg:rotate-[1.2deg] lg:gap-3 lg:px-4.5 lg:pt-3.5 lg:pb-2.5 lg:shadow-float">
+                    className="relative mx-auto -mt-8.5 flex w-fit -rotate-1 items-center gap-1.5 border border-rule-strong bg-paper-card px-2.5 pt-3 pb-2 shadow-float-sm lg:absolute lg:right-22 lg:-bottom-2 lg:mt-0 lg:rotate-[1.2deg] lg:gap-3 lg:px-4.5 lg:pt-3.5 lg:pb-2.5 lg:shadow-float"
+                >
                     <Tape className="-top-3.25 left-1/2 h-6.5 w-23 -translate-x-1/2 -rotate-3" />
                     <button
                         type="button"
@@ -214,7 +260,7 @@ export function HeroCarousel({ slides }: { slides: App.Data.Site.ImageData[] }) 
                         />
                         {slides.map((slide, index) => (
                             <Bud
-                                key={slide.src}
+                                key={slide.id}
                                 isActive={index === current}
                                 hasLeaf={index % 2 === 1}
                                 label={`Fotka ${index + 1} z ${count}`}

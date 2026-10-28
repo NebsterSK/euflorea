@@ -24,6 +24,13 @@ class AddPhotoToAlbum
     public const int MaxEdge = 3000;
 
     /**
+     * Largest accepted source, guarding against decompression bombs.
+     */
+    public const int MaxSourcePixels = 100_000_000;
+
+    public const int MaxSourceEdge = 20_000;
+
+    /**
      * Add the image at `$sourcePath` to the album as its last photo.
      */
     public function handle(Album $album, string $sourcePath, string $originalName, ?string $alt = null): Photo
@@ -60,6 +67,8 @@ class AddPhotoToAlbum
      */
     protected function cleanImage(string $sourcePath): string
     {
+        $this->assertReasonableGeometry($sourcePath);
+
         $image = new Imagick($sourcePath);
         $image->setIteratorIndex(0);
         $image->autoOrient();
@@ -84,11 +93,31 @@ class AddPhotoToAlbum
         $cleanPath = tempnam(sys_get_temp_dir(), 'photo-');
 
         if ($cleanPath === false || ! $image->writeImage('jpeg:'.$cleanPath)) {
+            if ($cleanPath !== false && is_file($cleanPath)) {
+                unlink($cleanPath);
+            }
+
             throw new RuntimeException('Could not write the cleaned image.');
         }
 
         $image->clear();
 
         return $cleanPath;
+    }
+
+    /**
+     * Read only the image header and reject absurd dimensions before decoding.
+     */
+    protected function assertReasonableGeometry(string $sourcePath): void
+    {
+        $probe = new Imagick;
+        $probe->pingImage($sourcePath);
+        $width = $probe->getImageWidth();
+        $height = $probe->getImageHeight();
+        $probe->clear();
+
+        if (max($width, $height) > self::MaxSourceEdge || $width * $height > self::MaxSourcePixels) {
+            throw new RuntimeException('The image dimensions are too large.');
+        }
     }
 }

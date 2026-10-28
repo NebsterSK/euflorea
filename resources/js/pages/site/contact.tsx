@@ -21,7 +21,6 @@ export default function Contact({
 
     return (
         <>
-
             <div className="mx-auto grid max-w-page gap-14 px-4 pt-14 pb-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:px-10 lg:pt-24 lg:pb-32">
                 <div className="flex flex-col gap-10 lg:pt-4">
                     <section className="flex flex-col gap-5 px-2 lg:px-0">
@@ -30,7 +29,8 @@ export default function Contact({
                             Plánujete <em>svadbu</em>?
                         </h1>
                         <p className="max-w-prose text-lead text-text lg:text-lead-lg">
-                            Napíšte nám termín a miesto a ozveme sa do dvoch dní.
+                            Napíšte nám termín a miesto a ozveme sa do dvoch
+                            dní.
                         </p>
                     </section>
 
@@ -39,7 +39,11 @@ export default function Contact({
                             {people.map((person, position) => (
                                 <li key={person.name}>
                                     <PaperCard
-                                        className={personTilts[position % personTilts.length]}
+                                        className={
+                                            personTilts[
+                                                position % personTilts.length
+                                            ]
+                                        }
                                         innerClassName="flex flex-col gap-1.5 p-5"
                                     >
                                         <p className="font-serif text-2xl font-medium text-plum">
@@ -76,11 +80,18 @@ export default function Contact({
                         aria-label="Sociálne siete"
                         className={cn(
                             'grid gap-4.5',
-                            social.facebook.url && 'md:grid-cols-2 lg:grid-cols-1',
+                            social.facebook.url &&
+                                'md:grid-cols-2 lg:grid-cols-1',
                         )}
                     >
-                        <SocialCard network="instagram" profile={social.instagram} />
-                        <SocialCard network="facebook" profile={social.facebook} />
+                        <SocialCard
+                            network="instagram"
+                            profile={social.instagram}
+                        />
+                        <SocialCard
+                            network="facebook"
+                            profile={social.facebook}
+                        />
                     </section>
                 </div>
 

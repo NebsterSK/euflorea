@@ -1,9 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import {
-    FacebookIcon,
-    InstagramIcon,
-    MenuIcon,
-} from '@/components/site/icons';
+import { FacebookIcon, InstagramIcon, MenuIcon } from '@/components/site/icons';
 import { Logo } from '@/components/site/logo';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -82,7 +78,11 @@ export function SiteHeader() {
             {tagline}
         </p>
     ) : (
-        <Link href={index()} className="block py-2" aria-label="Euflorea, domov">
+        <Link
+            href={index()}
+            className="block py-2"
+            aria-label="Euflorea, domov"
+        >
             <Logo className="w-28 lg:w-32" />
         </Link>
     );
@@ -118,7 +118,10 @@ export function SiteHeader() {
                     <Link
                         href={contact()}
                         className={cn(
-                            buttonVariants({ variant: 'paper', size: 'header' }),
+                            buttonVariants({
+                                variant: 'paper',
+                                size: 'header',
+                            }),
                             'ml-2.5',
                         )}
                     >
@@ -146,7 +149,7 @@ function MobileMenu({ nav }: { nav: ReturnType<typeof useSiteNav> }) {
                 closeLabel="Zavrieť menu"
                 overlayClassName="bg-ink/40"
                 closeClassName="top-4 right-4 flex size-12 items-center justify-center rounded-full text-plum opacity-100 focus:ring-0 focus:outline-2 data-[state=open]:bg-transparent [&_svg]:size-6 [&_svg]:stroke-[1.3]"
-                className="paper-grain w-[min(88vw,22rem)] gap-0 border-l border-rule px-8 pt-20 pb-10"
+                className="w-[min(88vw,22rem)] gap-0 border-l border-rule paper-grain px-8 pt-20 pb-10"
             >
                 <SheetTitle className="sr-only">Menu</SheetTitle>
                 <SheetDescription className="sr-only">
@@ -183,7 +186,10 @@ function MobileMenu({ nav }: { nav: ReturnType<typeof useSiteNav> }) {
                         <Link
                             href={contact()}
                             className={cn(
-                                buttonVariants({ variant: 'paper', size: 'cta' }),
+                                buttonVariants({
+                                    variant: 'paper',
+                                    size: 'cta',
+                                }),
                                 'w-full',
                             )}
                         >

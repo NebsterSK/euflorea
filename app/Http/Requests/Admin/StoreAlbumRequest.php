@@ -39,7 +39,7 @@ class StoreAlbumRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:2000'],
             'is_published' => ['boolean'],
             'is_homepage_carousel' => ['boolean'],
-            'cover_photo_id' => ['nullable', 'integer', Rule::exists('photos', 'id')->where('album_id', $this->route('album')?->id ?? 0)],
+            'cover_photo_id' => ['nullable', 'integer', Rule::exists('photos', 'id')->where('album_id', $this->route('album')->id ?? 0)],
         ];
     }
 

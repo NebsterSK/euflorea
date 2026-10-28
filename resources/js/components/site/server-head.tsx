@@ -27,26 +27,37 @@ export function ServerHead() {
             .map((node, position): ReactElement => {
                 const tag = node.tagName.toLowerCase();
                 const props: Record<string, string> = {
-                    key: node.getAttribute('data-inertia') ?? `${tag}-${position}`,
+                    key:
+                        node.getAttribute('data-inertia') ??
+                        `${tag}-${position}`,
                 };
 
                 for (const attribute of Array.from(node.attributes)) {
                     if (attribute.name === 'data-inertia') {
                         props['head-key'] = attribute.value;
                     } else {
-                        props[attribute.name === 'class' ? 'className' : attribute.name] =
-                            attribute.value;
+                        props[
+                            attribute.name === 'class'
+                                ? 'className'
+                                : attribute.name
+                        ] = attribute.value;
                     }
                 }
 
                 if (tag === 'script') {
                     return createElement(tag, {
                         ...props,
-                        dangerouslySetInnerHTML: { __html: node.textContent ?? '' },
+                        dangerouslySetInnerHTML: {
+                            __html: node.textContent ?? '',
+                        },
                     });
                 }
 
-                return createElement(tag, props, tag === 'title' ? node.textContent : undefined);
+                return createElement(
+                    tag,
+                    props,
+                    tag === 'title' ? node.textContent : undefined,
+                );
             });
     }, [head]);
 

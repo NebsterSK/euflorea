@@ -174,6 +174,101 @@
     background-repeat: repeat;
 }
 
+/*
+  Gentle scroll parallax for full-bleed background photos: the element is
+  taller than its section (see `ProcessSection`) and drifts as the section
+  crosses the viewport. Pure CSS scroll-driven animation, so it runs off the
+  main thread; browsers without `animation-timeline` and visitors who prefer
+  reduced motion get a still photo.
+*/
+@keyframes parallax-drift {
+    from {
+        translate: 0 -15.75%;
+    }
+    to {
+        translate: 0 15.75%;
+    }
+}
+
+@utility parallax-drift {
+    @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+            animation: parallax-drift linear both;
+            animation-timeline: view();
+        }
+    }
+}
+
+/*
+  Scroll reveals, same mechanism as the parallax (scroll-driven, no JS, off
+  for reduced motion and in browsers without `animation-timeline`).
+  Keyframes only define the start; the end is the element's own styles, so
+  tilts and offsets stay intact. `backwards` fill means nothing applies once
+  the reveal is done, so hover transitions keep working. Ranges are in `vh`
+  so the motion happens in the lower half of the screen, where it is seen,
+  not at the very bottom edge. Elements already on screen at load are
+  simply shown.
+
+  - `reveal`: paper settles in, a short rise and fade.
+  - `reveal-pop`: a small badge buds open (process numerals).
+  - `draw-in`: botanical line art draws itself; every shape in it needs
+    `pathLength={1}` (see `icons.tsx`).
+*/
+@keyframes reveal-rise {
+    from {
+        opacity: 0;
+        translate: 0 1.75rem;
+    }
+}
+
+@keyframes reveal-pop {
+    from {
+        opacity: 0;
+        scale: 0.6;
+    }
+}
+
+@keyframes draw-line {
+    from {
+        stroke-dashoffset: 1;
+    }
+}
+
+@utility reveal {
+    @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reveal-rise cubic-bezier(0.22, 0.7, 0.3, 1) backwards;
+            animation-timeline: view();
+            animation-range: cover 10vh cover 34vh;
+        }
+    }
+}
+
+@utility reveal-pop {
+    @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reveal-pop cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+            animation-timeline: view();
+            animation-range: cover 14vh cover 30vh;
+        }
+    }
+}
+
+@utility draw-in {
+    @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+            view-timeline-name: --draw-in;
+
+            & :is(path, circle) {
+                stroke-dasharray: 1;
+                animation: draw-line ease-out backwards;
+                animation-timeline: --draw-in;
+                animation-range: cover 15% cover 50%;
+            }
+        }
+    }
+}
+
 @layer base {
     * {
         @apply border-border;

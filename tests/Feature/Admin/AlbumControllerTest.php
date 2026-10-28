@@ -4,6 +4,8 @@ use App\Enums\AlbumType;
 use App\Models\Album;
 use App\Models\Photo;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('guests are redirected from the admin to the login page', function () {
@@ -141,4 +143,44 @@ test('deleting an album deletes its photos', function () {
 
     expect(Album::query()->count())->toBe(0)
         ->and(Photo::query()->count())->toBe(0);
+});
+
+test('deleting an album removes its photos files from both disks', function () {
+    Storage::fake('originals');
+    Storage::fake('public');
+
+    $album = Album::factory()->create();
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post(route('admin.photos.store', $album), [
+        'photo' => UploadedFile::fake()->image('svadba.jpg', 800, 1200),
+    ]);
+
+    $media = Photo::query()->sole()->image();
+    $originalPath = $media->getPathRelativeToRoot();
+    $variantPath = $media->getPathRelativeToRoot('web');
+
+    $this->actingAs($user)->delete(route('admin.albums.destroy', $album));
+
+    Storage::disk('originals')->assertMissing($originalPath);
+    Storage::disk('public')->assertMissing($variantPath);
+});
+
+test('updating an album keeps its cover photo', function () {
+    $album = Album::factory()->create();
+    $photo = Photo::factory()->for($album)->create();
+    $album->update(['cover_photo_id' => $photo->id]);
+
+    $this->actingAs(User::factory()->create())
+        ->patch(route('admin.albums.update', $album), [
+            'title' => 'Nový názov',
+            'slug' => $album->slug,
+            'type' => 'wedding',
+            'is_published' => '1',
+            'cover_photo_id' => $photo->id,
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($album->refresh()->cover_photo_id)->toBe($photo->id)
+        ->and($album->title)->toBe('Nový názov');
 });

@@ -3,6 +3,7 @@
 use App\Mail\InquiryConfirmation;
 use App\Mail\InquiryReceived;
 use App\Models\Inquiry;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -23,7 +24,7 @@ function inquiryPayload(array $overrides = []): array
         'services' => ['svadobne-kytice', 'vyzdoba-obradu'],
         'message' => 'Chceli by sme lúčne kvety a veľa zelene.',
         'consent' => '1',
-        'website' => '',
+        'fax_number_confirm' => '',
         ...$overrides,
     ];
 }
@@ -114,13 +115,17 @@ test('services and guest counts outside the lists are rejected', function () {
 
 test('a filled honeypot looks successful but stores and sends nothing', function () {
     Mail::fake();
+    Log::spy();
     config(['site.contact.recipient' => 'studio@euflorea.sk']);
 
-    $this->post(route('contact.send'), inquiryPayload(['website' => 'https://spam.example']))
+    $this->post(route('contact.send'), inquiryPayload(['fax_number_confirm' => 'https://spam.example']))
         ->assertSessionHasNoErrors();
 
     expect(Inquiry::query()->count())->toBe(0);
     Mail::assertNothingQueued();
+    Log::shouldHaveReceived('info')->withArgs(fn (string $message, array $context): bool => $message === 'Contact inquiry dropped by honeypot.'
+        && $context['email'] === 'lucia@example.com'
+        && ! array_key_exists('message', $context))->once();
 });
 
 test('the sixth inquiry within an hour from one address is refused with a message', function () {
@@ -131,4 +136,20 @@ test('the sixth inquiry within an hour from one address is refused with a messag
     $this->post(route('contact.send'), inquiryPayload())->assertSessionHasErrors('form');
 
     expect(Inquiry::query()->count())->toBe(5);
+});
+
+test('inquiry mails render user text literally, without links or images', function () {
+    $inquiry = Inquiry::factory()->make([
+        'name' => 'Eva [x](https://evil.test)',
+        'venue' => 'Dom | [x](https://evil.test)',
+        'message' => "[x](https://evil.test)\n![](https://evil.test/a.png)",
+    ]);
+
+    foreach ([new InquiryReceived($inquiry), new InquiryConfirmation($inquiry)] as $mailable) {
+        $html = $mailable->render();
+
+        expect($html)
+            ->not->toContain('href="https://evil.test')
+            ->not->toContain('src="https://evil.test');
+    }
 });

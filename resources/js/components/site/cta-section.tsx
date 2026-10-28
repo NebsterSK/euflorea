@@ -13,7 +13,7 @@ export function CtaSection() {
 
     return (
         <section className="mx-auto grid max-w-page gap-5.5 px-4 pt-20 pb-16 lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-10 lg:pt-35 lg:pb-30">
-            <div className="flex flex-col gap-5.5 px-2 lg:gap-6.5 lg:px-0">
+            <div className="flex reveal flex-col gap-5.5 px-2 lg:gap-6.5 lg:px-0">
                 <h2 className="font-serif text-[42px] leading-[1.02] text-plum lg:text-[clamp(44px,5vw,68px)]">
                     Plánujete svadbu? <em>Porozprávajme sa.</em>
                 </h2>
@@ -30,7 +30,7 @@ export function CtaSection() {
                     Kontaktujte nás
                 </Link>
             </div>
-            <div className="flex flex-col gap-4.5">
+            <div className="flex reveal flex-col gap-4.5">
                 <SocialCard network="instagram" profile={social.instagram} />
                 <SocialCard network="facebook" profile={social.facebook} />
             </div>

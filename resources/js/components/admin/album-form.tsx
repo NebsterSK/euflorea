@@ -23,7 +23,7 @@ import type { RouteFormDefinition } from '@/wayfinder';
 export function slugify(value: string): string {
     return value
         .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
+        .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
@@ -47,8 +47,11 @@ export function AlbumForm({
     return (
         <Form {...action} options={{ preserveScroll: true }}>
             {({ processing, errors }) => (
-                <fieldset disabled={processing} className="grid gap-6">
-                    <div className="grid gap-6 md:grid-cols-2">
+                <fieldset
+                    disabled={processing}
+                    className="@container grid gap-6"
+                >
+                    <div className="grid gap-6 @xl:grid-cols-2">
                         <div className="grid gap-2">
                             <Label htmlFor="title">Názov</Label>
                             <Input
@@ -110,7 +113,9 @@ export function AlbumForm({
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="wedding_date">Dátum (nepovinné)</Label>
+                            <Label htmlFor="wedding_date">
+                                Dátum (nepovinné)
+                            </Label>
                             <Input
                                 id="wedding_date"
                                 name="wedding_date"
@@ -120,7 +125,7 @@ export function AlbumForm({
                             <InputError message={errors.wedding_date} />
                         </div>
 
-                        <div className="grid gap-2 md:col-span-2">
+                        <div className="grid gap-2 @xl:col-span-2">
                             <Label htmlFor="location">Miesto (nepovinné)</Label>
                             <Input
                                 id="location"
@@ -131,7 +136,7 @@ export function AlbumForm({
                             <InputError message={errors.location} />
                         </div>
 
-                        <div className="grid gap-2 md:col-span-2">
+                        <div className="grid gap-2 @xl:col-span-2">
                             <Label htmlFor="description">
                                 Krátky popis (nepovinné)
                             </Label>
@@ -165,14 +170,17 @@ export function AlbumForm({
                                     Zverejnený v galérii
                                 </span>
                                 <span className="text-muted-foreground">
-                                    Kým nie je zverejnený, na webe ho nikto neuvidí.
+                                    Kým nie je zverejnený, na webe ho nikto
+                                    neuvidí.
                                 </span>
                             </span>
                         </label>
                         <label className="flex items-start gap-3">
                             <Switch
                                 name="is_homepage_carousel"
-                                defaultChecked={album?.isHomepageCarousel ?? false}
+                                defaultChecked={
+                                    album?.isHomepageCarousel ?? false
+                                }
                                 className="mt-0.5"
                             />
                             <span className="grid gap-1 text-sm">
@@ -180,8 +188,9 @@ export function AlbumForm({
                                     Karusel na úvodnej stránke
                                 </span>
                                 <span className="text-muted-foreground">
-                                    Fotky tohto albumu sa striedajú na úvode. Môže
-                                    to byť len jeden album a v galérii sa nezobrazí.
+                                    Fotky tohto albumu sa striedajú na úvode.
+                                    Môže to byť len jeden album a v galérii sa
+                                    nezobrazí.
                                 </span>
                             </span>
                         </label>

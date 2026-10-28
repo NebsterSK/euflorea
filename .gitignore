@@ -16,4 +16,3 @@
 /.phpunit.cache
 /public/fonts-manifest.dev.json
 .env.before_lerd
-/_handoff

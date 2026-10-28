@@ -105,7 +105,7 @@ export function InquiryForm({
 
     if (sent) {
         return (
-            <TapedSheet className="flex rotate-0 flex-col items-center gap-6 px-6 py-16 lg:rotate-0 text-center lg:px-14 lg:py-20">
+            <TapedSheet className="flex rotate-0 flex-col items-center gap-6 px-6 py-16 text-center lg:rotate-0 lg:px-14 lg:py-20">
                 <DillSprig
                     withSideBranch={false}
                     aria-hidden="true"
@@ -137,7 +137,7 @@ export function InquiryForm({
     }
 
     return (
-        <TapedSheet className="rotate-0 px-5 pt-12 pb-10 lg:rotate-0 sm:px-8 lg:px-14 lg:pt-16 lg:pb-14">
+        <TapedSheet className="rotate-0 px-5 pt-12 pb-10 sm:px-8 lg:rotate-0 lg:px-14 lg:pt-16 lg:pb-14">
             <Form
                 {...ContactController.send.form()}
                 options={{ preserveScroll: true }}
@@ -166,7 +166,9 @@ export function InquiryForm({
                                     <ul className="mt-1 list-disc pl-5">
                                         {messages.map(([field, message]) => (
                                             <li key={field}>
-                                                {fieldLabels[field.split('.')[0]]
+                                                {fieldLabels[
+                                                    field.split('.')[0]
+                                                ]
                                                     ? `${fieldLabels[field.split('.')[0]]}: `
                                                     : ''}
                                                 {message}
@@ -177,7 +179,11 @@ export function InquiryForm({
                             )}
 
                             <div className="grid gap-6 md:grid-cols-2">
-                                <Field id="name" label="Meno a priezvisko" error={errors.name}>
+                                <Field
+                                    id="name"
+                                    label="Meno a priezvisko"
+                                    error={errors.name}
+                                >
                                     <input
                                         id="name"
                                         name="name"
@@ -188,7 +194,11 @@ export function InquiryForm({
                                         {...errorProps('name', errors.name)}
                                     />
                                 </Field>
-                                <Field id="email" label="E-mail" error={errors.email}>
+                                <Field
+                                    id="email"
+                                    label="E-mail"
+                                    error={errors.email}
+                                >
                                     <input
                                         id="email"
                                         name="email"
@@ -199,7 +209,12 @@ export function InquiryForm({
                                         {...errorProps('email', errors.email)}
                                     />
                                 </Field>
-                                <Field id="phone" label="Telefón" optional error={errors.phone}>
+                                <Field
+                                    id="phone"
+                                    label="Telefón"
+                                    optional
+                                    error={errors.phone}
+                                >
                                     <input
                                         id="phone"
                                         name="phone"
@@ -210,7 +225,11 @@ export function InquiryForm({
                                         {...errorProps('phone', errors.phone)}
                                     />
                                 </Field>
-                                <Field id="wedding_date" label="Dátum svadby" error={errors.wedding_date}>
+                                <Field
+                                    id="wedding_date"
+                                    label="Dátum svadby"
+                                    error={errors.wedding_date}
+                                >
                                     <input
                                         type="hidden"
                                         name="wedding_date"
@@ -230,16 +249,23 @@ export function InquiryForm({
                                             className={cn(
                                                 fieldClassName,
                                                 'text-left',
-                                                !weddingDate && 'text-muted-ink',
+                                                !weddingDate &&
+                                                    'text-muted-ink',
                                             )}
-                                            {...errorProps('wedding_date', errors.wedding_date)}
+                                            {...errorProps(
+                                                'wedding_date',
+                                                errors.wedding_date,
+                                            )}
                                         >
                                             {weddingDate && !dateUnknown
-                                                ? weddingDate.toLocaleDateString('sk-SK', {
-                                                      day: 'numeric',
-                                                      month: 'long',
-                                                      year: 'numeric',
-                                                  })
+                                                ? weddingDate.toLocaleDateString(
+                                                      'sk-SK',
+                                                      {
+                                                          day: 'numeric',
+                                                          month: 'long',
+                                                          year: 'numeric',
+                                                      },
+                                                  )
                                                 : dateUnknown
                                                   ? 'Zatiaľ nevieme'
                                                   : 'Vyberte dátum'}
@@ -262,17 +288,24 @@ export function InquiryForm({
                                                 classNames={{
                                                     root: 'text-ink',
                                                     months: 'relative',
-                                                    month_caption: 'flex h-10 items-center justify-center font-serif text-xl text-plum capitalize',
+                                                    month_caption:
+                                                        'flex h-10 items-center justify-center font-serif text-xl text-plum capitalize',
                                                     nav: 'absolute inset-x-0 top-0 flex h-10 items-center justify-between',
-                                                    button_previous: 'flex size-10 items-center justify-center text-plum disabled:opacity-30',
-                                                    button_next: 'flex size-10 items-center justify-center text-plum disabled:opacity-30',
+                                                    button_previous:
+                                                        'flex size-10 items-center justify-center text-plum disabled:opacity-30',
+                                                    button_next:
+                                                        'flex size-10 items-center justify-center text-plum disabled:opacity-30',
                                                     chevron: 'size-4 fill-plum',
-                                                    weekday: 'size-10 text-eyebrow font-light text-rose-text uppercase',
+                                                    weekday:
+                                                        'size-10 text-eyebrow font-light text-rose-text uppercase',
                                                     day: 'p-0',
-                                                    day_button: 'size-10 rounded-full text-small hover:bg-bud',
-                                                    selected: '[&>button]:bg-plum [&>button]:text-paper',
+                                                    day_button:
+                                                        'size-10 rounded-full text-small hover:bg-bud',
+                                                    selected:
+                                                        '[&>button]:bg-plum [&>button]:text-paper',
                                                     today: 'font-medium text-plum',
-                                                    disabled: 'opacity-30 [&>button]:hover:bg-transparent',
+                                                    disabled:
+                                                        'opacity-30 [&>button]:hover:bg-transparent',
                                                     outside: 'opacity-40',
                                                 }}
                                             />
@@ -285,14 +318,21 @@ export function InquiryForm({
                                             value="1"
                                             checked={dateUnknown}
                                             onChange={(event) =>
-                                                setDateUnknown(event.target.checked)
+                                                setDateUnknown(
+                                                    event.target.checked,
+                                                )
                                             }
                                             className="size-5 accent-plum"
                                         />
                                         Dátum ešte nevieme presne
                                     </label>
                                 </Field>
-                                <Field id="venue" label="Miesto svadby" optional error={errors.venue}>
+                                <Field
+                                    id="venue"
+                                    label="Miesto svadby"
+                                    optional
+                                    error={errors.venue}
+                                >
                                     <input
                                         id="venue"
                                         name="venue"
@@ -301,12 +341,20 @@ export function InquiryForm({
                                         {...errorProps('venue', errors.venue)}
                                     />
                                 </Field>
-                                <Field id="guests" label="Približný počet hostí" optional error={errors.guests}>
+                                <Field
+                                    id="guests"
+                                    label="Približný počet hostí"
+                                    optional
+                                    error={errors.guests}
+                                >
                                     <select
                                         id="guests"
                                         name="guests"
                                         defaultValue=""
-                                        className={cn(fieldClassName, 'appearance-none bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10')}
+                                        className={cn(
+                                            fieldClassName,
+                                            'appearance-none bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10',
+                                        )}
                                         style={{
                                             backgroundImage:
                                                 "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2354284A' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E\")",
@@ -315,7 +363,10 @@ export function InquiryForm({
                                     >
                                         <option value="">Vyberte</option>
                                         {guestOptions.map((option) => (
-                                            <option key={option.value} value={option.value}>
+                                            <option
+                                                key={option.value}
+                                                value={option.value}
+                                            >
                                                 {option.label}
                                             </option>
                                         ))}
@@ -348,7 +399,11 @@ export function InquiryForm({
                                 </div>
                             </fieldset>
 
-                            <Field id="message" label="Vaša predstava" error={errors.message}>
+                            <Field
+                                id="message"
+                                label="Vaša predstava"
+                                error={errors.message}
+                            >
                                 <textarea
                                     id="message"
                                     name="message"
@@ -361,11 +416,16 @@ export function InquiryForm({
                                 />
                             </Field>
 
-                            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-                                <label htmlFor="website">Webstránka</label>
+                            <div
+                                aria-hidden="true"
+                                className="absolute -left-[9999px] h-px w-px overflow-hidden"
+                            >
+                                <label htmlFor="fax_number_confirm">
+                                    Webstránka
+                                </label>
                                 <input
-                                    id="website"
-                                    name="website"
+                                    id="fax_number_confirm"
+                                    name="fax_number_confirm"
                                     type="text"
                                     tabIndex={-1}
                                     autoComplete="off"
@@ -380,7 +440,10 @@ export function InquiryForm({
                                         value="1"
                                         required
                                         className="mt-0.5 size-5 shrink-0 accent-plum"
-                                        {...errorProps('consent', errors.consent)}
+                                        {...errorProps(
+                                            'consent',
+                                            errors.consent,
+                                        )}
                                     />
                                     <span>
                                         Súhlasím so{' '}
@@ -395,7 +458,10 @@ export function InquiryForm({
                                     </span>
                                 </label>
                                 {errors.consent && (
-                                    <p id="consent-error" className="text-small text-destructive">
+                                    <p
+                                        id="consent-error"
+                                        className="text-small text-destructive"
+                                    >
                                         {errors.consent}
                                     </p>
                                 )}
@@ -404,7 +470,10 @@ export function InquiryForm({
                             <button
                                 type="submit"
                                 className={cn(
-                                    buttonVariants({ variant: 'paper', size: 'cta' }),
+                                    buttonVariants({
+                                        variant: 'paper',
+                                        size: 'cta',
+                                    }),
                                     'mt-2 w-full sm:w-auto sm:self-start',
                                 )}
                             >

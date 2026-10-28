@@ -79,7 +79,9 @@ export default function Login({
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Zapamätať si ma</Label>
+                                <Label htmlFor="remember">
+                                    Zapamätať si ma
+                                </Label>
                             </div>
 
                             <Button

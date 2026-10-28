@@ -19,14 +19,15 @@ export default function GalleryIndex({
 }) {
     const { social } = usePage().props;
     const [type, setType] = useState<App.Enums.AlbumType | null>(null);
-    const visible = type ? albums.filter((album) => album.type === type) : albums;
+    const visible = type
+        ? albums.filter((album) => album.type === type)
+        : albums;
     const hasBothTypes =
         albums.some((album) => album.type === 'wedding') &&
         albums.some((album) => album.type === 'editorial');
 
     return (
         <>
-
             <section className="mx-auto flex max-w-page flex-col gap-5 px-6 pt-16 pb-12 lg:px-10 lg:pt-24 lg:pb-16">
                 <Eyebrow>Galéria</Eyebrow>
                 <h1 className="font-serif text-[44px] leading-[1.02] text-balance text-plum lg:text-[clamp(44px,5vw,72px)]">
@@ -52,7 +53,7 @@ export default function GalleryIndex({
                                 aria-pressed={type === filter.value}
                                 onClick={() => setType(filter.value)}
                                 className={cn(
-                                    '-mb-px border-b border-transparent px-0.5 py-3 text-nav text-plum uppercase transition-colors hover:border-plum',
+                                    '-mb-px inline-flex min-h-11 items-center border-b border-transparent px-0.5 py-3 text-nav text-plum uppercase transition-colors hover:border-plum',
                                     type === filter.value && 'border-plum',
                                 )}
                             >
@@ -70,7 +71,7 @@ export default function GalleryIndex({
                         <DillSprig
                             withSideBranch={false}
                             aria-hidden="true"
-                            className="h-28 w-14 text-rose"
+                            className="h-28 w-14 draw-in text-rose"
                         />
                         <p className="font-serif text-[28px] leading-tight text-plum">
                             Čoskoro tu pribudnú naše svadby.

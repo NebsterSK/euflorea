@@ -12,6 +12,7 @@ use App\Mail\InquiryReceived;
 use App\Models\Inquiry;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -52,6 +53,12 @@ class ContactController extends Controller
         $data = $request->toData();
 
         if ($data->isSpam) {
+            Log::info('Contact inquiry dropped by honeypot.', [
+                'name' => $data->name,
+                'email' => $data->email,
+                'ip' => $data->ip,
+            ]);
+
             return $this->thankYou();
         }
 

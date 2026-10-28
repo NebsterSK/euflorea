@@ -26,6 +26,8 @@
         <env name="DB_CONNECTION" value="mysql"/>
         <env name="DB_DATABASE" value="euflorea_test"/>
         <env name="MAIL_MAILER" value="array"/>
+        <env name="SITE_CONTACT_RECIPIENT" value=""/>
+        <env name="SITE_CONTACT_SEND_CONFIRMATION" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
     </php>

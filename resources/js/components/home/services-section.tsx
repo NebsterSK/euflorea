@@ -10,7 +10,8 @@ import { cn } from '@/lib/utils';
 const services = [
     {
         title: 'Svadobné kytice',
-        description: 'Kytica pre nevestu, pierka pre svedkov a kvety do vlasov.',
+        description:
+            'Kytica pre nevestu, pierka pre svedkov a kvety do vlasov.',
         Icon: BouquetIcon,
         tilt: '-rotate-[0.8deg] lg:-rotate-1',
     },
@@ -40,7 +41,7 @@ const services = [
 export function ServicesSection() {
     return (
         <section className="mx-auto flex max-w-page flex-col gap-5.5 px-4 pb-22.5 lg:gap-12 lg:px-10 lg:pb-37.5">
-            <div className="border-b border-rule px-2 pb-3.5 lg:px-0 lg:pb-5">
+            <div className="reveal border-b border-rule px-2 pb-3.5 lg:px-0 lg:pb-5">
                 <h2 className="font-serif text-[34px] leading-[1.1] text-plum md:text-[40px] lg:text-5xl">
                     Čo pre vás urobíme
                 </h2>
@@ -50,14 +51,14 @@ export function ServicesSection() {
                     <li key={title}>
                         <PaperCard
                             className={cn(
-                                'h-full transition-[rotate,translate] duration-500 ease-soft lg:hover:rotate-0 lg:hover:-translate-y-0.75 motion-reduce:lg:hover:translate-y-0',
+                                'h-full reveal transition-[rotate,translate] duration-500 ease-soft lg:hover:-translate-y-0.75 lg:hover:rotate-0 motion-reduce:lg:hover:translate-y-0',
                                 tilt,
                             )}
                             innerClassName="flex items-start gap-4.5 p-5 md:min-h-75 md:flex-col md:gap-4 md:px-6.5 md:pt-8.5 md:pb-7.5"
                         >
                             <Icon
                                 aria-hidden="true"
-                                className="size-12 shrink-0 text-plum md:size-14"
+                                className="size-12 shrink-0 draw-in text-plum md:size-14"
                             />
                             <div className="flex flex-col gap-1.5 md:gap-4">
                                 <h3 className="font-serif text-2xl leading-[1.2] font-medium text-plum md:text-[26px] lg:text-[28px]">

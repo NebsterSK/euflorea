@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\PhotoFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -22,11 +24,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property int $focal_x
  * @property int $focal_y
  * @property int $sort_order
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Album $album
- * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, Media> $media
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ * @property-read Album $album
+ * @property-read MediaCollection<int, Media> $media
  * @property-read int|null $media_count
+ *
  * @method static \Database\Factories\PhotoFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Photo newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Photo newQuery()
@@ -42,6 +45,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Photo whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Photo whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Photo whereWidth($value)
+ *
  * @mixin \Eloquent
  */
 #[Fillable([
@@ -106,19 +110,19 @@ class Photo extends Model implements HasMedia
     public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('web')
-            ->fit(Fit::Max, 2400, 2400)
-            ->format('webp')
-            ->quality(90)
+            ->performOnCollections(self::Collection)
             ->withResponsiveImages()
             ->nonOptimized()
-            ->performOnCollections(self::Collection);
+            ->fit(Fit::Max, 2400, 2400)
+            ->format('webp')
+            ->quality(90);
 
         $this->addMediaConversion('thumb')
+            ->performOnCollections(self::Collection)
+            ->nonOptimized()
             ->fit(Fit::Max, 640, 640)
             ->format('webp')
-            ->quality(78)
-            ->nonOptimized()
-            ->performOnCollections(self::Collection);
+            ->quality(78);
     }
 
     /**

@@ -13,6 +13,7 @@ import type { DragEvent, MouseEvent } from 'react';
 import AlbumController from '@/actions/App/Http/Controllers/Admin/AlbumController';
 import PhotoController from '@/actions/App/Http/Controllers/Admin/PhotoController';
 import { ConfirmDelete } from '@/components/admin/confirm-delete';
+import { Hint } from '@/components/admin/hint';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,11 +28,13 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import type { FlashToast } from '@/types/ui';
 
 type Upload = {
     key: string;
     name: string;
     progress: number;
+    message?: string;
     status: 'waiting' | 'uploading' | 'done' | 'failed';
 };
 
@@ -45,13 +48,20 @@ export function PhotoManager({
     const [uploads, setUploads] = useState<Upload[]>([]);
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
     const [draggedId, setDraggedId] = useState<number | null>(null);
-    const [editing, setEditing] = useState<App.Data.Admin.PhotoData | null>(null);
+    const [editing, setEditing] = useState<App.Data.Admin.PhotoData | null>(
+        null,
+    );
     const fileInput = useRef<HTMLInputElement>(null);
-    const isUploading = uploads.some((upload) => upload.status === 'uploading' || upload.status === 'waiting');
+    const isUploading = uploads.some(
+        (upload) =>
+            upload.status === 'uploading' || upload.status === 'waiting',
+    );
 
     const updateUpload = (key: string, changes: Partial<Upload>) =>
         setUploads((current) =>
-            current.map((upload) => (upload.key === key ? { ...upload, ...changes } : upload)),
+            current.map((upload) =>
+                upload.key === key ? { ...upload, ...changes } : upload,
+            ),
         );
 
     const uploadFiles = async (files: File[]) => {
@@ -85,13 +95,25 @@ export function PhotoManager({
                                 progress: Math.round(event?.percentage ?? 0),
                             }),
                         onSuccess: (page) => {
-                            const failed = Object.keys(page.props.errors ?? {}).length > 0;
+                            const flash = (
+                                page as { flash?: { toast?: FlashToast } }
+                            ).flash;
+                            const message =
+                                page.props.errors?.photo ??
+                                (flash?.toast?.type === 'error'
+                                    ? flash.toast.message
+                                    : undefined);
                             updateUpload(key, {
-                                status: failed ? 'failed' : 'done',
+                                status: message ? 'failed' : 'done',
+                                message,
                                 progress: 100,
                             });
                         },
-                        onError: () => updateUpload(key, { status: 'failed' }),
+                        onError: (errors) =>
+                            updateUpload(key, {
+                                status: 'failed',
+                                message: errors.photo,
+                            }),
                         onFinish: () => resolve(),
                     },
                 );
@@ -123,7 +145,9 @@ export function PhotoManager({
             return;
         }
 
-        const ids = photos.map((photo) => photo.id).filter((id) => id !== draggedId);
+        const ids = photos
+            .map((photo) => photo.id)
+            .filter((id) => id !== draggedId);
         ids.splice(ids.indexOf(targetId), 0, draggedId);
         setDraggedId(null);
         saveOrder(ids);
@@ -139,13 +163,20 @@ export function PhotoManager({
     };
 
     return (
-        <section className="flex flex-col gap-5">
+        <section className="@container flex flex-col gap-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h2 className="text-xl font-semibold tracking-tight">Fotky</h2>
+                    <h2 className="text-xl font-semibold tracking-tight">
+                        Fotky
+                    </h2>
                     <p className="text-sm text-muted-foreground">
-                        {photos.length} {photos.length === 1 ? 'fotka' : photos.length < 5 && photos.length > 0 ? 'fotky' : 'fotiek'}.
-                        Poradie zmeníte šípkami alebo potiahnutím.
+                        {photos.length}{' '}
+                        {photos.length === 1
+                            ? 'fotka'
+                            : photos.length < 5 && photos.length > 0
+                              ? 'fotky'
+                              : 'fotiek'}
+                        . Poradie zmeníte šípkami alebo potiahnutím.
                     </p>
                 </div>
             </div>
@@ -176,7 +207,11 @@ export function PhotoManager({
                     disabled={isUploading}
                     onClick={() => fileInput.current?.click()}
                 >
-                    {isUploading ? <Loader2 className="animate-spin" /> : <ImagePlus />}
+                    {isUploading ? (
+                        <Loader2 className="animate-spin" />
+                    ) : (
+                        <ImagePlus />
+                    )}
                     Vybrať fotky
                 </Button>
                 <input
@@ -203,7 +238,8 @@ export function PhotoManager({
                                 <span
                                     className={cn(
                                         'shrink-0 text-muted-foreground',
-                                        upload.status === 'failed' && 'text-destructive',
+                                        upload.status === 'failed' &&
+                                            'text-destructive',
                                     )}
                                 >
                                     {
@@ -217,13 +253,18 @@ export function PhotoManager({
                                 </span>
                             </div>
                             <Progress value={upload.progress} className="h-1" />
+                            {upload.status === 'failed' && upload.message && (
+                                <p className="text-xs break-words text-destructive">
+                                    {upload.message}
+                                </p>
+                            )}
                         </li>
                     ))}
                 </ul>
             )}
 
             {photos.length > 0 && (
-                <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <ul className="grid grid-cols-2 gap-3 @xl:grid-cols-3 @4xl:grid-cols-4 @7xl:grid-cols-5">
                     {photos.map((photo, position) => {
                         const isCover = album.coverPhotoId === photo.id;
 
@@ -289,59 +330,93 @@ export function PhotoManager({
                                 </button>
                                 <div className="flex items-center justify-between gap-1 p-1">
                                     <div className="flex">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            aria-label="Posunúť dopredu"
-                                            disabled={position === 0}
-                                            onClick={() => move(position, -1)}
-                                        >
-                                            <ArrowLeft />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            aria-label="Posunúť dozadu"
-                                            disabled={position === photos.length - 1}
-                                            onClick={() => move(position, 1)}
-                                        >
-                                            <ArrowRight />
-                                        </Button>
+                                        <Hint label="Posunúť dopredu">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                aria-label="Posunúť dopredu"
+                                                disabled={position === 0}
+                                                onClick={() =>
+                                                    move(position, -1)
+                                                }
+                                            >
+                                                <ArrowLeft />
+                                            </Button>
+                                        </Hint>
+                                        <Hint label="Posunúť dozadu">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                aria-label="Posunúť dozadu"
+                                                disabled={
+                                                    position ===
+                                                    photos.length - 1
+                                                }
+                                                onClick={() =>
+                                                    move(position, 1)
+                                                }
+                                            >
+                                                <ArrowRight />
+                                            </Button>
+                                        </Hint>
                                     </div>
                                     <div className="flex">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            aria-label="Nastaviť ako obálku"
-                                            disabled={isCover}
-                                            onClick={() =>
-                                                router.patch(
-                                                    AlbumController.cover.url(album.id),
-                                                    { photo_id: photo.id },
-                                                    { preserveScroll: true },
-                                                )
-                                            }
-                                        >
-                                            <Star className={cn(isCover && 'fill-current')} />
-                                        </Button>
-                                        <ConfirmDelete
-                                            title="Zmazať fotku?"
-                                            description="Fotka sa odstráni z albumu aj z webu. Túto akciu nie je možné vrátiť."
-                                            onConfirm={() =>
-                                                router.delete(
-                                                    PhotoController.destroy.url(photo.id),
-                                                    { preserveScroll: true },
-                                                )
+                                        <Hint
+                                            label={
+                                                isCover
+                                                    ? 'Toto je obálka albumu'
+                                                    : 'Nastaviť ako obálku albumu'
                                             }
                                         >
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                aria-label="Zmazať fotku"
+                                                aria-label="Nastaviť ako obálku albumu"
+                                                disabled={isCover}
+                                                onClick={() =>
+                                                    router.patch(
+                                                        AlbumController.cover.url(
+                                                            album.id,
+                                                        ),
+                                                        { photo_id: photo.id },
+                                                        {
+                                                            preserveScroll: true,
+                                                        },
+                                                    )
+                                                }
                                             >
-                                                <Trash2 className="text-destructive" />
+                                                <Star
+                                                    className={cn(
+                                                        isCover &&
+                                                            'fill-current',
+                                                    )}
+                                                />
                                             </Button>
-                                        </ConfirmDelete>
+                                        </Hint>
+                                        <Hint label="Zmazať fotku">
+                                            <ConfirmDelete
+                                                title="Zmazať fotku?"
+                                                description="Fotka sa odstráni z albumu aj z webu. Túto akciu nie je možné vrátiť."
+                                                onConfirm={() =>
+                                                    router.delete(
+                                                        PhotoController.destroy.url(
+                                                            photo.id,
+                                                        ),
+                                                        {
+                                                            preserveScroll: true,
+                                                        },
+                                                    )
+                                                }
+                                            >
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    aria-label="Zmazať fotku"
+                                                >
+                                                    <Trash2 className="text-destructive" />
+                                                </Button>
+                                            </ConfirmDelete>
+                                        </Hint>
                                     </div>
                                 </div>
                             </li>
@@ -404,7 +479,8 @@ function PhotoDialog({
                 <DialogHeader>
                     <DialogTitle>Upraviť fotku</DialogTitle>
                     <DialogDescription>
-                        Ťuknite na miesto, ktoré musí zostať viditeľné pri orezaní.
+                        Ťuknite na miesto, ktoré musí zostať viditeľné pri
+                        orezaní.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -461,7 +537,9 @@ function PhotoDialog({
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="photo-alt">Popis fotky (pre nevidiacich a Google)</Label>
+                    <Label htmlFor="photo-alt">
+                        Popis fotky (pre nevidiacich a Google)
+                    </Label>
                     <Textarea
                         id="photo-alt"
                         rows={2}

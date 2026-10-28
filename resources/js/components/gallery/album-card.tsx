@@ -27,7 +27,7 @@ export function AlbumCard({
         <Link
             href={show(album.slug)}
             className={cn(
-                'group relative block bg-paper-card p-2.5 shadow-card-sm transition-[rotate,translate,box-shadow] duration-500 ease-soft hover:-translate-y-1 hover:rotate-0 hover:shadow-lift focus-visible:-translate-y-1 focus-visible:rotate-0 focus-visible:shadow-lift motion-reduce:hover:translate-y-0 lg:p-3 lg:shadow-card',
+                'group relative block reveal bg-paper-card p-2.5 shadow-card-sm transition-[rotate,translate,box-shadow] duration-500 ease-soft hover:-translate-y-1 hover:rotate-0 hover:shadow-lift focus-visible:-translate-y-1 focus-visible:rotate-0 focus-visible:shadow-lift motion-reduce:hover:translate-y-0 lg:p-3 lg:shadow-card',
                 tilts[position % tilts.length],
             )}
         >

@@ -18,7 +18,6 @@ export default function GalleryShow({
 
     return (
         <>
-
             <header className="mx-auto flex max-w-page flex-col gap-4 px-6 pt-12 pb-10 lg:px-10 lg:pt-20 lg:pb-14">
                 <Link
                     href={index()}
@@ -59,7 +58,7 @@ export default function GalleryShow({
                                     setOpenIndex(position);
                                 }}
                                 aria-label={`Zväčšiť fotku ${position + 1} z ${album.photos.length}${photo.alt ? `: ${photo.alt}` : ''}`}
-                                className="block w-full bg-paper-card p-1.5 shadow-card-sm transition-[translate,box-shadow] duration-500 ease-soft hover:-translate-y-0.5 hover:shadow-card lg:p-2"
+                                className="block w-full reveal bg-paper-card p-1.5 shadow-card-sm transition-[translate,box-shadow] duration-500 ease-soft hover:-translate-y-0.5 hover:shadow-card lg:p-2"
                             >
                                 <img
                                     src={photo.src}

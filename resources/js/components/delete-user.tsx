@@ -49,8 +49,8 @@ export default function DeleteUser() {
                         </DialogTitle>
                         <DialogDescription>
                             Po zrušení účtu budú natrvalo odstránené aj všetky
-                            jeho údaje. Zadajte svoje heslo a potvrďte, že chcete
-                            účet natrvalo zrušiť.
+                            jeho údaje. Zadajte svoje heslo a potvrďte, že
+                            chcete účet natrvalo zrušiť.
                         </DialogDescription>
 
                         <Form

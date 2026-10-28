@@ -6,9 +6,7 @@ Website for Euflorea, a small Slovak wedding and floral styling studio. Couples 
 
 - `PRODUCT.md` — product specification: users, pages, domain, business rules.
 - `DESIGN.md` — "Herbár" design system: tokens, typography, components. Follow it for all UI work.
-- `PLAN.md` — build order with checkboxes, content to seed, open items.
 - `CLAUDE.md` + `.ai/rules/` — coding rules and conventions for contributors and AI agents.
-- `_handoff/` (local only, gitignored) — original design handoff: approved homepage reference HTML, screenshots and the client's full-quality photos.
 
 ## Stack
 
@@ -16,14 +14,14 @@ Website for Euflorea, a small Slovak wedding and floral styling studio. Couples 
 - Inertia.js v3 + React 19 (React Compiler) + TypeScript, Tailwind CSS v4, ShadCN (Radix), sonner (toasts), lucide-react (admin and form icons only); client-side rendering only (SSR off: `inertia({ ssr: false })` in `vite.config.ts` and `INERTIA_SSR_ENABLED=false`); light theme only
 - Laravel Fortify (auth, email verification routes, 2FA), Laravel Wayfinder (typed routes), Laravel Head (document head)
 - `spatie/laravel-data` (DTOs), `spatie/laravel-typescript-transformer` (TS codegen), `spatie/laravel-query-builder` (filtering/sorting), `spatie/laravel-permission` (installed, unused for now: no roles, any logged-in user can do everything)
-- Self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `embla-carousel-react` (lightbox swipe); being added (see `PLAN.md`): `spatie/laravel-medialibrary` (photos and responsive variants)
+- `spatie/laravel-medialibrary` (photos and responsive WebP variants), `resend/resend-php` (mail), self-hosted fonts via `@fontsource` (Cormorant Garamond, Jost), `embla-carousel-react` (lightbox swipe)
 
 ## Assets
 
 - `resources/images/brand/logo-plum.png` — working logo (wordmark + sprig, transparent). The tagline is rendered as text. `logo-original.jpg` is the client's original, reference only.
 - `resources/images/svg/` — source drawings of the line art and icons; used on the site as React components in `resources/js/components/site/icons.tsx`.
 - `resources/images/paper-grain.webp` — tiling paper grain; `resources/images/home/` — the "Ako to rastie" background in three WebP widths.
-- Photos are uploaded through the admin; the seeder imports the initial albums from `_handoff/photos/` when present.
+- Photos are content, not code: they are uploaded through the admin and live in the database and `storage/` (include both in server backups).
 - Dev: Laravel Boost (AI guidelines + MCP), Laravel IDE Helper (model doc blocks), Debugbar, Checkpoint, Rapidlogin
 - Quality: Pest (feature + arch tests), Larastan with banned-code rules, Pint, Vite+ (`vp check`: oxlint + oxfmt)
 
@@ -62,11 +60,24 @@ npm run types:check          # tsc
 
 > Wayfinder note: the Vite plugin generates route helpers with `formVariants: true` (`vite.config.ts`). When regenerating from the CLI, always pass `--with-form`, otherwise pages that use `route.form()` (auth/settings) break.
 
+## Production
+
+Hosted on Laravel Forge. Deploy script: `git pull`, `composer install --no-dev` (keeps Rapidlogin, Debugbar and other dev packages off the server), `npm ci && npm run build`, `php artisan optimize`, `php artisan migrate --force`, `php artisan queue:restart`.
+
+One-time server setup and environment checklist:
+
+- `php artisan storage:link` (photos are served from `/storage`).
+- A queue worker (`QUEUE_CONNECTION=database`) for photo conversions and mails, and the scheduler cron (`schedule:run` every minute) for `model:prune`, which deletes inquiries two years after the last contact as the privacy policy promises.
+- `CACHE_STORE=database` or `file`, never `array`: the contact form and login rate limits and `queue:restart` live in the cache.
+- `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://euflorea.sk`, `SESSION_SECURE_COOKIE=true`, `RAPIDLOGIN_ENABLED=false`.
+- Mail: `MAIL_MAILER=resend`, `RESEND_KEY`, `MAIL_FROM_*`, `SITE_CONTACT_RECIPIENT` (see Configuration).
+- PHP `upload_max_filesize` / `post_max_size` of at least 25M / 30M and `imagick` installed.
+- Fortify registration is still enabled so the client can create accounts; turn it off afterwards (`config/fortify.php`).
+
 ## Photos
 
-- Every photo (admin upload or `php artisan photos:import {path}`) goes through `App\Actions\Albums\AddPhotoToAlbum`: EXIF orientation applied, metadata stripped, long edge capped at 3000px, stored as the private original on the `originals` disk (`storage/app/originals`). The media library then writes WebP conversions (`web` with responsive widths, `thumb` for the admin) to the `public` disk. Conversions are queued: run a queue worker in production (`QUEUE_CONNECTION=sync` locally runs them inline).
+- Every photo uploaded in the admin goes through `App\Actions\Albums\AddPhotoToAlbum`: EXIF orientation applied, metadata stripped, long edge capped at 3000px, stored as the private original on the `originals` disk (`storage/app/originals`). The media library then writes WebP conversions (`web` with responsive widths, `thumb` for the admin) to the `public` disk. Conversions are queued: run a queue worker in production (`QUEUE_CONNECTION=sync` locally runs them inline).
 - The admin uploads photos as they are (up to 25 MB each), so PHP needs `upload_max_filesize` / `post_max_size` of at least 25M / 30M (lerd's default is 2M / 8M; set in `~/.local/share/lerd/php/8.5/98-user.ini`, and on the server).
-- Initial content: `php artisan photos:import _handoff/photos` (manifest in `database/data/initial-albums.json`, safe to re-run). See `PLAN.md` for the one-time production flow.
 
 ## SEO and head
 
@@ -75,6 +86,8 @@ Controllers describe the page with `laravel/head` (`Head::title('Galéria')->des
 ## Configuration
 
 `config/site.php`: Instagram/Facebook URLs (`SITE_INSTAGRAM_*`, `SITE_FACEBOOK_*`; a profile without a URL is hidden), contact people, inquiry recipient and confirmation mail (`SITE_CONTACT_*`), and the data controller shown on the privacy page (`GDPR_OPERATOR_NAME`, `_ADDRESS`, `_COMPANY_ID`, `_EMAIL`).
+
+Mail goes through Resend in production (`MAIL_MAILER=resend`, `RESEND_KEY`, `MAIL_FROM_ADDRESS` on the Resend-verified domain, which is not euflorea.sk; inquiry mails reply-to the couple). Locally `MAIL_MAILER=log`.
 
 ## Architecture
 

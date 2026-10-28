@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\AlbumType;
+use Carbon\CarbonImmutable;
 use Database\Factories\AlbumFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,18 +20,19 @@ use Illuminate\Support\Facades\DB;
  * @property string $title
  * @property string $slug
  * @property AlbumType $type
- * @property \Carbon\CarbonImmutable|null $wedding_date
+ * @property CarbonImmutable|null $wedding_date
  * @property string|null $location
  * @property string|null $description
  * @property int|null $cover_photo_id
  * @property bool $is_published
  * @property bool $is_homepage_carousel
  * @property int $sort_order
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Photo|null $coverPhoto
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Photo> $photos
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ * @property-read Photo|null $coverPhoto
+ * @property-read Collection<int, Photo> $photos
  * @property-read int|null $photos_count
+ *
  * @method static \Database\Factories\AlbumFactory factory($count = null, $state = [])
  * @method static Builder<static>|Album galleryOrder()
  * @method static Builder<static>|Album newModelQuery()
@@ -49,6 +52,7 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder<static>|Album whereType($value)
  * @method static Builder<static>|Album whereUpdatedAt($value)
  * @method static Builder<static>|Album whereWeddingDate($value)
+ *
  * @mixin \Eloquent
  */
 #[Fillable([
@@ -106,6 +110,8 @@ class Album extends Model
 
     /**
      * Albums listed in the public gallery: published, never the homepage carousel.
+     *
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function visibleInGallery(Builder $query): void
@@ -115,6 +121,8 @@ class Album extends Model
 
     /**
      * The public gallery order.
+     *
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function galleryOrder(Builder $query): void

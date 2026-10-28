@@ -17,7 +17,7 @@ class UpdateCoverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'photo_id' => ['required', 'integer', Rule::exists('photos', 'id')->where('album_id', $this->route('album')?->id ?? 0)],
+            'photo_id' => ['required', 'integer', Rule::exists('photos', 'id')->where('album_id', $this->route('album')->id ?? 0)],
         ];
     }
 

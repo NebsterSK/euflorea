@@ -75,7 +75,10 @@ export default function InquiriesIndex({
                         <SelectContent>
                             <SelectItem value={allStatuses}>Všetky</SelectItem>
                             {statusOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
+                                <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                >
                                     {option.label}
                                 </SelectItem>
                             ))}
@@ -158,21 +161,31 @@ export default function InquiriesIndex({
                                 </div>
                                 <div className="grid content-start gap-2 text-sm">
                                     <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-                                        <dt className="text-muted-foreground">Svadba</dt>
+                                        <dt className="text-muted-foreground">
+                                            Svadba
+                                        </dt>
                                         <dd className="tabular-nums">
                                             {inquiry.dateUnknown
                                                 ? 'dátum zatiaľ nevedia'
-                                                : (inquiry.weddingDate ?? 'neuvedený')}
+                                                : (inquiry.weddingDate ??
+                                                  'neuvedený')}
                                         </dd>
-                                        <dt className="text-muted-foreground">Miesto</dt>
+                                        <dt className="text-muted-foreground">
+                                            Miesto
+                                        </dt>
                                         <dd>{inquiry.venue ?? 'neuvedené'}</dd>
-                                        <dt className="text-muted-foreground">Hostia</dt>
+                                        <dt className="text-muted-foreground">
+                                            Hostia
+                                        </dt>
                                         <dd>{inquiry.guests ?? 'neuvedené'}</dd>
                                     </dl>
                                     {inquiry.services.length > 0 && (
                                         <div className="flex flex-wrap gap-1">
                                             {inquiry.services.map((service) => (
-                                                <Badge key={service} variant="secondary">
+                                                <Badge
+                                                    key={service}
+                                                    variant="secondary"
+                                                >
                                                     {service}
                                                 </Badge>
                                             ))}
@@ -187,7 +200,9 @@ export default function InquiriesIndex({
                                         checked={inquiry.isHandled}
                                         onCheckedChange={(checked) =>
                                             router.patch(
-                                                InquiryController.update.url(inquiry.id),
+                                                InquiryController.update.url(
+                                                    inquiry.id,
+                                                ),
                                                 { value: checked },
                                                 { preserveScroll: true },
                                             )

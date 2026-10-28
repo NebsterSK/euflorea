@@ -40,7 +40,7 @@ class ContactRequest extends FormRequest
             'services.*' => [Rule::enum(Service::class)],
             'message' => ['required', 'string', 'max:3000'],
             'consent' => ['accepted'],
-            'website' => ['nullable', 'string', 'max:255'],
+            'fax_number_confirm' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -69,7 +69,7 @@ class ContactRequest extends FormRequest
             ...$validated,
             'wedding_date' => $validated['date_unknown'] ? null : ($validated['wedding_date'] ?? null),
             'services' => array_values(array_unique($validated['services'] ?? [])),
-            'is_spam' => filled($validated['website'] ?? null),
+            'is_spam' => filled($validated['fax_number_confirm'] ?? null),
             'ip' => $this->ip(),
             'user_agent' => substr((string) $this->userAgent(), 0, 255),
         ]);

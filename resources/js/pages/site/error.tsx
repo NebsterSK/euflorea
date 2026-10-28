@@ -47,7 +47,6 @@ export default function ErrorPage({ status }: { status: number }) {
 
     return (
         <>
-
             <section className="relative mx-auto flex max-w-page flex-col items-start gap-6 overflow-hidden px-6 pt-16 pb-28 lg:px-10 lg:pt-28 lg:pb-40">
                 <DillSprig
                     aria-hidden="true"
@@ -63,13 +62,17 @@ export default function ErrorPage({ status }: { status: number }) {
                 <div className="mt-4 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                     <Link
                         href={index()}
-                        className={cn(buttonVariants({ variant: 'paper', size: 'cta' }))}
+                        className={cn(
+                            buttonVariants({ variant: 'paper', size: 'cta' }),
+                        )}
                     >
                         Na úvodnú stránku
                     </Link>
                     <Link
                         href={galleryIndex()}
-                        className={cn(buttonVariants({ variant: 'paper', size: 'cta' }))}
+                        className={cn(
+                            buttonVariants({ variant: 'paper', size: 'cta' }),
+                        )}
                     >
                         Do galérie
                     </Link>

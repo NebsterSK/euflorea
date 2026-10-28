@@ -61,7 +61,8 @@ export default function TwoFactorRecoveryCodes({
                 </CardTitle>
                 <CardDescription>
                     Záložné kódy vám umožnia obnoviť prístup, ak stratíte
-                    zariadenie s 2FA. Uložte si ich do bezpečného správcu hesiel.
+                    zariadenie s 2FA. Uložte si ich do bezpečného správcu
+                    hesiel.
                 </CardDescription>
             </CardHeader>
             <CardContent>

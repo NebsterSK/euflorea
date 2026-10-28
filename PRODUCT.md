@@ -1,10 +1,10 @@
 # Product
 
-What Euflorea's website is, who it's for and what it must do. Code conventions live in `CLAUDE.md` and `.ai/rules/`; the UI design system in `DESIGN.md`; build progress and open items in `PLAN.md`. The original design handoff is in `_handoff/` (local only, gitignored).
+What Euflorea's website is, who it's for and what it must do. Code conventions live in `CLAUDE.md` and `.ai/rules/`; the UI design system in `DESIGN.md`.
 
 ## 1. Summary
 
-**Euflorea** is a small Slovak floral studio specialising in **wedding decoration and floral styling** ("svadobný a kvetinový styling"). They design and deliver the flowers and décor for a couple's whole wedding day: the bride's bouquet, the ceremony, the reception tables and the overall styling of the venue. Besides weddings they produce **styled editorial shoots** as promotional material: *Structured Grace* (indoor, pink gerberas, carnations and calla lilies on crumpled paper backdrops) and *Wild West* (outdoor meadow, horses, cowboy hats, orange callas and wildflowers).
+**Euflorea** is a small Slovak floral studio specialising in **wedding decoration and floral styling** ("svadobný a kvetinový styling"). They design and deliver the flowers and décor for a couple's whole wedding day: the bride's bouquet, the ceremony, the reception tables and the overall styling of the venue. Besides weddings they produce **styled editorial shoots** as promotional material: _Structured Grace_ (indoor, pink gerberas, carnations and calla lilies on crumpled paper backdrops) and _Wild West_ (outdoor meadow, horses, cowboy hats, orange callas and wildflowers).
 
 This website shows their work as photo albums, turns visitors into wedding inquiries and sends them to Instagram and Facebook. A small admin lets the studio manage albums and photos themselves.
 
@@ -14,23 +14,25 @@ The studio has no website, only Facebook and Instagram ([@euflorea_](https://www
 
 ## 3. Users
 
-| Role | Who | Main goals | Permissions |
-| --- | --- | --- | --- |
-| Visitor | Couples planning their wedding, mostly in Slovakia. Arrive inspired and emotional, compare several decorators, mostly on a phone. | See real past work, feel the studio's taste, send an inquiry, follow on Instagram | Public pages only |
-| Studio (admin) | Euflorea staff, non-technical, occasional use | Add albums and photos after each wedding, set covers and focal points, swap homepage carousel photos, read inquiries | Everything in `/admin` |
+| Role           | Who                                                                                                                               | Main goals                                                                                                           | Permissions            |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| Visitor        | Couples planning their wedding, mostly in Slovakia. Arrive inspired and emotional, compare several decorators, mostly on a phone. | See real past work, feel the studio's taste, send an inquiry, follow on Instagram                                    | Public pages only      |
+| Studio (admin) | Euflorea staff, non-technical, occasional use                                                                                     | Add albums and photos after each wedding, set covers and focal points, swap homepage carousel photos, read inquiries | Everything in `/admin` |
 
 - **No roles:** any authenticated user can do everything in the admin. `spatie/laravel-permission` stays installed but **unused for now**.
-- Users are inserted into the DB manually. Fortify **registration stays enabled for now** (decide before launch, see `PLAN.md`).
+- Users are inserted into the DB manually. Fortify **registration is still enabled** (see Open questions).
 
 ## 4. Goals and non-goals
 
 **Goals**
+
 1. **Show the work.** Real weddings are the main product; every wedding becomes an album in the Gallery.
 2. **Convert to an inquiry.** Couples send date, venue and wishes easily through the Contact form.
 3. **Send people to Instagram and Facebook**, where the client is most active.
 4. **Express the brand.** Floral, handmade, artistic, happy and romantic; never a generic wedding template. An earlier dark, moody direction was rejected as sad.
 
 **Non-goals**
+
 - Online shop, pricing, booking calendar or payments.
 - Blog or news.
 - Multiple languages (Slovak only).
@@ -42,66 +44,65 @@ The studio has no website, only Facebook and Instagram ([@euflorea_](https://www
 
 ## 5. Features
 
-| Module | Feature | Priority | Status |
-| --- | --- | --- | --- |
-| Public | Homepage: logo hero, photo carousel, intro, services, process, CTA + socials | Must | done |
-| Public | Gallery: album list with Svadby / Editoriály filter | Must | done |
-| Public | Album page: photo grid + lightbox, next album, CTA | Must | done |
-| Public | Contact: contact people, big social cards, inquiry form | Must | done (people and Facebook wait for client data) |
-| Public | Inquiry mails to the studio and optional copy to the couple | Must | done in code; sending needs a mail setup (`MAIL_*`, `SITE_CONTACT_RECIPIENT`) |
-| Public | Privacy policy page (GDPR, needed for the form) | Must | done (draft text, client to review) |
-| Public | SEO: titles, meta descriptions, OG image, sitemap, robots, JSON-LD | Should | done |
-| Public | Branded error pages (403, 404, 500, 503) | Should | done |
-| Admin | Overview with counts and shortcuts | Should | done |
-| Admin | Albums CRUD with publish toggle and reordering | Must | done |
-| Admin | Photos: multi-upload with progress, reorder, alt text, focal point, set cover, delete | Must | done |
-| Admin | Homepage carousel managed as a flagged album | Should | done |
-| Admin | Inquiries: list with "handled" switch | Could | done |
-| Content | `photos:import` for the initial albums and carousel | Must | done (production run pending) |
-| Auth | Login, password reset, email verification, 2FA (Fortify, starter kit), in Slovak | Must | done |
-| Settings | Profile, password and 2FA, in Slovak | Must | done |
+| Module   | Feature                                                                               | Priority | Status                                                                           |
+| -------- | ------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------- |
+| Public   | Homepage: logo hero, photo carousel, intro, services, process, CTA + socials          | Must     | done                                                                             |
+| Public   | Gallery: album list with Svadby / Editoriály filter                                   | Must     | done                                                                             |
+| Public   | Album page: photo grid + lightbox, next album, CTA                                    | Must     | done                                                                             |
+| Public   | Contact: contact people, big social cards, inquiry form                               | Must     | done (people and Facebook wait for client data)                                  |
+| Public   | Inquiry mails to the studio and optional copy to the couple                           | Must     | done; sent through Resend once `RESEND_KEY` and `SITE_CONTACT_RECIPIENT` are set |
+| Public   | Privacy policy page (GDPR, needed for the form)                                       | Must     | done (draft text, client to review)                                              |
+| Public   | SEO: titles, meta descriptions, OG image, sitemap, robots, JSON-LD                    | Should   | done                                                                             |
+| Public   | Branded error pages (403, 404, 500, 503)                                              | Should   | done                                                                             |
+| Admin    | Overview with counts and shortcuts                                                    | Should   | done                                                                             |
+| Admin    | Albums CRUD with publish toggle and reordering                                        | Must     | done                                                                             |
+| Admin    | Photos: multi-upload with progress, reorder, alt text, focal point, set cover, delete | Must     | done                                                                             |
+| Admin    | Homepage carousel managed as a flagged album                                          | Should   | done                                                                             |
+| Admin    | Inquiries: list with "handled" switch                                                 | Could    | done                                                                             |
+| Auth     | Login, password reset, email verification, 2FA (Fortify, starter kit), in Slovak      | Must     | done                                                                             |
+| Settings | Profile, password and 2FA, in Slovak                                                  | Must     | done                                                                             |
 
 ## 6. Pages and routes
 
 Slovak slugs, no trailing slashes. Shared layout: `SiteHeader` + `SiteFooter`; the active nav item is marked.
 
-| Route | Name | Page |
-| --- | --- | --- |
-| `GET /` | `index` | Domov |
-| `GET /galeria` | `gallery.index` | Galéria: album list |
-| `GET /galeria/{slug}` | `gallery.show` | One album |
-| `GET /kontakt` | `contact` | Kontakt |
-| `POST /kontakt` | `contact.send` | Inquiry form submit |
-| `GET /ochrana-osobnych-udajov` | `privacy` | Privacy policy |
-| `GET /robots.txt` | `robots` | Closed outside production |
-| `GET /sitemap.xml` | `sitemap` | Public pages and published albums |
-| `GET /admin` | `dashboard` | Admin overview (auth required) |
-| `/admin/*` | `admin.*` | Admin (auth required) |
+| Route                          | Name            | Page                              |
+| ------------------------------ | --------------- | --------------------------------- |
+| `GET /`                        | `index`         | Domov                             |
+| `GET /galeria`                 | `gallery.index` | Galéria: album list               |
+| `GET /galeria/{slug}`          | `gallery.show`  | One album                         |
+| `GET /kontakt`                 | `contact`       | Kontakt                           |
+| `POST /kontakt`                | `contact.send`  | Inquiry form submit               |
+| `GET /ochrana-osobnych-udajov` | `privacy`       | Privacy policy                    |
+| `GET /robots.txt`              | `robots`        | Closed outside production         |
+| `GET /sitemap.xml`             | `sitemap`       | Public pages and published albums |
+| `GET /admin`                   | `dashboard`     | Admin overview (auth required)    |
+| `/admin/*`                     | `admin.*`       | Admin (auth required)             |
 
 ### Homepage (`/`)
 
-Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in order:
+Fully designed; see `DESIGN.md` §7. Sections in order:
 
 1. **Header**: nav (Domov, Galéria, Kontakt), tagline "Kvety pre váš veľký deň", Instagram/Facebook, "Napíšte nám" → `/kontakt`.
 2. **Logo hero**: wordmark + tagline "Svadobný a kvetinový styling" (text).
 3. **Carousel**: photos of the homepage carousel album.
-4. **O nás**: "Kvety, ktoré *rozprávajú* váš príbeh." + intro + "Pozrite si naše svadby →".
+4. **O nás**: "Kvety, ktoré _rozprávajú_ váš príbeh." + intro + "Pozrite si naše svadby →".
 5. **Čo pre vás urobíme** (services):
 
-| Title | What it covers |
-| --- | --- |
-| Svadobné kytice | Bride's bouquet, boutonnières for witnesses, flowers for the hair |
-| Výzdoba obradu | Floral arches, aisles and altars, in church or outdoors |
-| Stolovanie a hostina | Table arrangements, candles, name cards, the newlyweds' head table |
-| Styling priestoru | Overall concept: colours, textiles and flowers tying the day together |
+| Title                | What it covers                                                        |
+| -------------------- | --------------------------------------------------------------------- |
+| Svadobné kytice      | Bride's bouquet, boutonnières for witnesses, flowers for the hair     |
+| Výzdoba obradu       | Floral arches, aisles and altars, in church or outdoors               |
+| Stolovanie a hostina | Table arrangements, candles, name cards, the newlyweds' head table    |
+| Styling priestoru    | Overall concept: colours, textiles and flowers tying the day together |
 
 6. **Ako to rastie** (process) over a full-bleed photo (`wild_west_editorial/9`): i Zoznámenie (meeting, the couple shares who they are, the venue and their ideas) · ii Návrh (moodboard, flower selection, clear budget) · iii Príprava (ordering seasonal flowers, finalising details) · iv Svadobný deň (installation on the day, clean-up after).
-7. **CTA**: "Plánujete svadbu? *Porozprávajme sa.*" + "Kontaktujte nás" + Instagram and Facebook cards.
+7. **CTA**: "Plánujete svadbu? _Porozprávajme sa._" + "Kontaktujte nás" + Instagram and Facebook cards.
 8. **Footer**: wordmark, nav, "© {year} Euflorea · Made with ♥ by [Legacy Upgrade](https://legacy-upgrade.com/)".
 
 ### Gallery (`/galeria`)
 
-- Intro: eyebrow "Galéria" → "Naše *svadby*" → "Každá svadba je iná. Pozrite sa, ako sme ich obliekli do kvetov." (copy to confirm).
+- Intro: eyebrow "Galéria" → "Naše _svadby_" → "Každá svadba je iná. Pozrite sa, ako sme ich obliekli do kvetov." (copy to confirm).
 - Published albums only, as photo-print cards (cover, title, meta line: date or season · location). Order: `sort_order` asc, then `wedding_date` desc.
 - Filter "Všetko" / "Svadby" / "Editoriály" by album `type`, shown only when both types exist.
 - Empty state: "Čoskoro tu pribudnú naše svadby." + Instagram link.
@@ -116,24 +117,24 @@ Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in ord
 
 ### Contact (`/kontakt`)
 
-1. Intro: eyebrow "Kontakt" → "Plánujete *svadbu*?" → "Napíšte nám termín a miesto a ozveme sa do dvoch dní."
+1. Intro: eyebrow "Kontakt" → "Plánujete _svadbu_?" → "Napíšte nám termín a miesto a ozveme sa do dvoch dní."
 2. Contact people: name, role, phone (`tel:`), email (`mailto:`), from `config/site.php` → `contact.people`. Hidden while the list is empty; data pending from the client.
 3. Instagram and Facebook cards, **big and prominent** (client requirement).
 4. Inquiry form on a taped paper sheet.
 
-| Field | Label | Type | Required | Validation |
-| --- | --- | --- | --- | --- |
-| `name` | Meno a priezvisko | text | yes | max 120 |
-| `email` | E-mail | email | yes | `email:rfc,dns` in production, `email:rfc` elsewhere |
-| `phone` | Telefón | tel | | max 30 |
-| `wedding_date` | Dátum svadby | date picker | yes, unless `date_unknown` | today or later |
-| `date_unknown` | Dátum ešte nevieme presne | checkbox | | makes `wedding_date` optional |
-| `venue` | Miesto svadby | text | | max 160 |
-| `guests` | Približný počet hostí | select: do 30 / 30 až 60 / 60 až 100 / 100 až 150 / viac ako 150 | | in list |
-| `services[]` | Čo vás zaujíma | checkbox chips: the 4 services | | subset of list |
-| `message` | Vaša predstava | textarea (6 rows) | yes | max 3000 |
-| `consent` | Súhlasím so spracovaním osobných údajov (link to privacy page) | checkbox | yes | accepted |
-| `website` | honeypot, visually hidden | text | | must be empty |
+| Field          | Label                                                          | Type                                                             | Required                   | Validation                                           |
+| -------------- | -------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------- | ---------------------------------------------------- |
+| `name`         | Meno a priezvisko                                              | text                                                             | yes                        | max 120                                              |
+| `email`        | E-mail                                                         | email                                                            | yes                        | `email:rfc,dns` in production, `email:rfc` elsewhere |
+| `phone`        | Telefón                                                        | tel                                                              |                            | max 30                                               |
+| `wedding_date` | Dátum svadby                                                   | date picker                                                      | yes, unless `date_unknown` | today or later                                       |
+| `date_unknown` | Dátum ešte nevieme presne                                      | checkbox                                                         |                            | makes `wedding_date` optional                        |
+| `venue`        | Miesto svadby                                                  | text                                                             |                            | max 160                                              |
+| `guests`       | Približný počet hostí                                          | select: do 30 / 30 až 60 / 60 až 100 / 100 až 150 / viac ako 150 |                            | in list                                              |
+| `services[]`   | Čo vás zaujíma                                                 | checkbox chips: the 4 services                                   |                            | subset of list                                       |
+| `message`      | Vaša predstava                                                 | textarea (6 rows)                                                | yes                        | max 3000                                             |
+| `consent`      | Súhlasím so spracovaním osobných údajov (link to privacy page) | checkbox                                                         | yes                        | accepted                                             |
+| `website`      | honeypot, visually hidden                                      | text                                                             |                            | must be empty                                        |
 
 ## 7. Key user flows
 
@@ -145,7 +146,7 @@ Fully designed; see `DESIGN.md` §7 and `_handoff/screenshots/`. Sections in ord
 
 ## 8. Domain model
 
-**Glossary:** *Album* (one wedding or editorial shoot), *Svadba* (wedding, `wedding`), *Editorial* (styled promo shoot, `editorial`), *Cover* (the album's card photo), *Focal point* (x/y % kept visible when a photo is cropped), *Homepage carousel* (the special album driving the hero), *Inquiry* (contact form submission).
+**Glossary:** _Album_ (one wedding or editorial shoot), _Svadba_ (wedding, `wedding`), _Editorial_ (styled promo shoot, `editorial`), _Cover_ (the album's card photo), _Focal point_ (x/y % kept visible when a photo is cropped), _Homepage carousel_ (the special album driving the hero), _Inquiry_ (contact form submission).
 
 ```
 albums
@@ -181,17 +182,17 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 
 ## 10. Notifications
 
-| Trigger | Recipient | Channel | Content |
-| --- | --- | --- | --- |
-| Inquiry submitted | Studio (`SITE_CONTACT_RECIPIENT`; nothing is sent while empty) | Mail, queued | All form fields, reply-to the couple |
-| Inquiry submitted (when `SITE_CONTACT_SEND_CONFIRMATION=true`) | The couple | Mail, queued | Thank you + copy of their message |
-| Inquiry submitted | Visitor | Sonner toast + success card | "Ďakujeme! Ozveme sa vám do dvoch dní." |
-| Admin save / delete / upload | Admin user | Sonner toast via flash | Success or error |
+| Trigger                                                        | Recipient                                                      | Channel                     | Content                                 |
+| -------------------------------------------------------------- | -------------------------------------------------------------- | --------------------------- | --------------------------------------- |
+| Inquiry submitted                                              | Studio (`SITE_CONTACT_RECIPIENT`; nothing is sent while empty) | Mail, queued                | All form fields, reply-to the couple    |
+| Inquiry submitted (when `SITE_CONTACT_SEND_CONFIRMATION=true`) | The couple                                                     | Mail, queued                | Thank you + copy of their message       |
+| Inquiry submitted                                              | Visitor                                                        | Sonner toast + success card | "Ďakujeme! Ozveme sa vám do dvoch dní." |
+| Admin save / delete / upload                                   | Admin user                                                     | Sonner toast via flash      | Success or error                        |
 
 ## 11. Integrations
 
 - **Instagram** `https://www.instagram.com/euflorea_/` and **Facebook** (URL pending): outbound links only, no API or embeds. Configured in `config/site.php` (`SITE_INSTAGRAM_URL`, `SITE_FACEBOOK_URL`); a profile without a URL is hidden everywhere rather than linking to `#`.
-- **Mail:** inquiry mails must work without a paid mail service (solution to be decided later). Inquiries are always stored in the DB first, so nothing is lost while mail is not set up.
+- **Mail:** sent through Resend (free tier, the developer's account and verified domain); the sender address is not on euflorea.sk, so the studio answers through reply-to. Inquiries are always stored in the DB first, so nothing is lost if sending fails.
 - **Storage:** spatie/laravel-medialibrary; WebP variants on the `public` disk, originals on a private disk; S3-compatible later if needed.
 - **Analytics:** none decided; if added, cookie-less (e.g. Plausible) to avoid a consent banner.
 
@@ -201,17 +202,20 @@ Relations: Album hasMany Photo (ordered by `sort_order`), Album belongsTo cover 
 - **Devices:** mobile first, verified at 390px; no horizontal overflow, ≥44px touch targets, no drag-only interactions.
 - **Rendering:** client-side Inertia, no SSR. Controllers set the page title, description and share image with `laravel/head` (`Head::title()`…); the tags are in the initial HTML for crawlers and link previews, and `ServerHead` keeps them in sync after client-side navigation. Defaults (title suffix, Open Graph, icons, `noindex` outside production) live in `AppServiceProvider::configureHead()`.
 - **Images:** every photo (initial import and admin uploads alike) goes through one `spatie/laravel-medialibrary` pipeline. The cleaned original (JPEG quality 95, long edge max 3000px) is stored on a **private** disk, never served, and kept only to regenerate variants. The site serves **WebP only** (quality 90, max 2400px) in responsive widths, EXIF stripped (GPS) and orientation respected, generated on the queue (a queue worker must run). No AVIF or JPEG fallback. Render with `srcset` + `sizes`, explicit `width`/`height`, lazy loading except above the fold, focal point → `object-position: {focal_x}% {focal_y}%`. Hero first slide `fetchpriority="high"`.
-- **Initial content:** photos are content, not code; the database plus storage is their source of truth and must be in server backups. The initial albums are loaded by an idempotent `photos:import {path}` artisan command (skips albums whose slug exists) that uses the same pipeline as admin uploads. See `PLAN.md` for the one-time production flow.
+- **Content:** photos are content, not code; the database plus storage is their source of truth and must be in server backups.
 - **Performance:** homepage LCP under 2.5s on 4G (the hero carousel image is the LCP).
 - **Accessibility:** WCAG 2.2 AA, see `DESIGN.md` §10.
 - **Privacy:** GDPR. Self-hosted fonts (no Google Fonts CDN), privacy policy page, explicit consent checkbox on the form, no tracking cookies.
 - **SEO:** `sitemap.xml` (public pages and published albums), dynamic `robots.txt` (closed outside production), JSON-LD `Florist` with Instagram and Facebook in `sameAs`, OG image `public/og-image.jpg` (logo on paper 1200×630) or the album's first photo.
 - **Errors:** 403, 404, 500 and 503 render the branded `site/error` page (server errors only with debug off).
 
-## 13. Roadmap
+## 13. Open questions
 
-Build order and progress are tracked in `PLAN.md`. v1 = everything marked Must and Should above.
-
-## 14. Open questions
-
-Tracked with checkboxes in `PLAN.md` → "Open items".
+- Fortify registration: turn it off (users are added manually)?
+- Facebook page URL (`SITE_FACEBOOK_URL`; Facebook links stay hidden until set).
+- Contact people for the contact page (`config/site.php` → `contact.people`).
+- Photographer credits and permission to publish; couples' consent to be named.
+- Album dates and locations for the three weddings.
+- Privacy policy text and company details (`GDPR_OPERATOR_*`), reviewed by the client.
+- Vector logo; then favicon and OG image from it.
+- Whether `spatie/laravel-permission` is needed at all.

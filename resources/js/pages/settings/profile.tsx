@@ -88,7 +88,8 @@ export default function Profile({
                                 auth.user.email_verified_at === null && (
                                     <div>
                                         <p className="-mt-4 text-sm text-muted-foreground">
-                                            Vaša e-mailová adresa nie je overená.{' '}
+                                            Vaša e-mailová adresa nie je
+                                            overená.{' '}
                                             <Link
                                                 href={send()}
                                                 as="button"

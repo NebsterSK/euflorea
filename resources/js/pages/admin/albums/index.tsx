@@ -1,7 +1,17 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, ImageOff, Images, Pencil, Plus, Trash2, X } from 'lucide-react';
+import {
+    ArrowDown,
+    ArrowUp,
+    ImageOff,
+    Images,
+    Pencil,
+    Plus,
+    Trash2,
+    X,
+} from 'lucide-react';
 import AlbumController from '@/actions/App/Http/Controllers/Admin/AlbumController';
 import { ConfirmDelete } from '@/components/admin/confirm-delete';
+import { Hint } from '@/components/admin/hint';
 import {
     Pagination,
     SortableHeader,
@@ -86,7 +96,10 @@ export default function AlbumsIndex({
                     <Select
                         value={filters.type ?? allTypes}
                         onValueChange={(value) =>
-                            list.setFilter('type', value === allTypes ? null : value)
+                            list.setFilter(
+                                'type',
+                                value === allTypes ? null : value,
+                            )
                         }
                         disabled={list.loading}
                     >
@@ -94,9 +107,14 @@ export default function AlbumsIndex({
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value={allTypes}>Všetky typy</SelectItem>
+                            <SelectItem value={allTypes}>
+                                Všetky typy
+                            </SelectItem>
                             {typeOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
+                                <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                >
                                     {option.label}
                                 </SelectItem>
                             ))}
@@ -137,7 +155,9 @@ export default function AlbumsIndex({
                             <TableHeader>
                                 <TableRow>
                                     {canReorder && (
-                                        <TableHead className="w-24">Poradie</TableHead>
+                                        <TableHead className="w-24">
+                                            Poradie
+                                        </TableHead>
                                     )}
                                     <TableHead>
                                         <SortableHeader
@@ -158,9 +178,13 @@ export default function AlbumsIndex({
                                             disabled={list.loading}
                                         />
                                     </TableHead>
-                                    <TableHead className="text-right">Fotky</TableHead>
+                                    <TableHead className="text-right">
+                                        Fotky
+                                    </TableHead>
                                     <TableHead>Zverejnený</TableHead>
-                                    <TableHead className="text-right">Akcie</TableHead>
+                                    <TableHead className="text-right">
+                                        Akcie
+                                    </TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody
@@ -171,34 +195,54 @@ export default function AlbumsIndex({
                                         {canReorder && (
                                             <TableCell>
                                                 <div className="flex gap-1">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        aria-label={`Posunúť ${album.title} vyššie`}
-                                                        disabled={position === 0}
-                                                        onClick={() =>
-                                                            patch(
-                                                                AlbumController.move(album.id),
-                                                                { direction: 'up' },
-                                                            )
-                                                        }
-                                                    >
-                                                        <ArrowUp />
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        aria-label={`Posunúť ${album.title} nižšie`}
-                                                        disabled={position === albums.length - 1}
-                                                        onClick={() =>
-                                                            patch(
-                                                                AlbumController.move(album.id),
-                                                                { direction: 'down' },
-                                                            )
-                                                        }
-                                                    >
-                                                        <ArrowDown />
-                                                    </Button>
+                                                    <Hint label="Posunúť vyššie">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            aria-label={`Posunúť ${album.title} vyššie`}
+                                                            disabled={
+                                                                position === 0
+                                                            }
+                                                            onClick={() =>
+                                                                patch(
+                                                                    AlbumController.move(
+                                                                        album.id,
+                                                                    ),
+                                                                    {
+                                                                        direction:
+                                                                            'up',
+                                                                    },
+                                                                )
+                                                            }
+                                                        >
+                                                            <ArrowUp />
+                                                        </Button>
+                                                    </Hint>
+                                                    <Hint label="Posunúť nižšie">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            aria-label={`Posunúť ${album.title} nižšie`}
+                                                            disabled={
+                                                                position ===
+                                                                albums.length -
+                                                                    1
+                                                            }
+                                                            onClick={() =>
+                                                                patch(
+                                                                    AlbumController.move(
+                                                                        album.id,
+                                                                    ),
+                                                                    {
+                                                                        direction:
+                                                                            'down',
+                                                                    },
+                                                                )
+                                                            }
+                                                        >
+                                                            <ArrowDown />
+                                                        </Button>
+                                                    </Hint>
                                                 </div>
                                             </TableCell>
                                         )}
@@ -221,7 +265,10 @@ export default function AlbumsIndex({
                                                 <span className="flex flex-col gap-1">
                                                     {album.title}
                                                     {album.isHomepageCarousel && (
-                                                        <Badge variant="secondary" className="w-fit">
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="w-fit"
+                                                        >
                                                             Karusel na úvode
                                                         </Badge>
                                                     )}
@@ -241,50 +288,76 @@ export default function AlbumsIndex({
                                                     nie je v galérii
                                                 </span>
                                             ) : (
-                                                <Switch
-                                                    checked={album.isPublished}
-                                                    aria-label={`Zverejniť ${album.title}`}
-                                                    onCheckedChange={(checked) =>
-                                                        patch(
-                                                            AlbumController.publish(album.id),
-                                                            { value: checked },
-                                                        )
+                                                <Hint
+                                                    label={
+                                                        album.isPublished
+                                                            ? 'Zverejnený v galérii, kliknutím skryjete'
+                                                            : 'Skrytý, kliknutím zverejníte v galérii'
                                                     }
-                                                />
+                                                >
+                                                    <Switch
+                                                        checked={
+                                                            album.isPublished
+                                                        }
+                                                        aria-label={`Zverejniť ${album.title}`}
+                                                        onCheckedChange={(
+                                                            checked,
+                                                        ) =>
+                                                            patch(
+                                                                AlbumController.publish(
+                                                                    album.id,
+                                                                ),
+                                                                {
+                                                                    value: checked,
+                                                                },
+                                                            )
+                                                        }
+                                                    />
+                                                </Hint>
                                             )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex justify-end gap-1">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    asChild
-                                                >
-                                                    <Link
-                                                        href={edit(album.id)}
-                                                        aria-label={`Upraviť ${album.title}`}
-                                                    >
-                                                        <Pencil />
-                                                    </Link>
-                                                </Button>
-                                                <ConfirmDelete
-                                                    title={`Zmazať album ${album.title}?`}
-                                                    description="Zmažú sa aj všetky jeho fotky. Túto akciu nie je možné vrátiť."
-                                                    onConfirm={() =>
-                                                        router.delete(
-                                                            AlbumController.destroy.url(album.id),
-                                                            { preserveScroll: true },
-                                                        )
-                                                    }
-                                                >
+                                                <Hint label="Upraviť album">
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        aria-label={`Zmazať ${album.title}`}
+                                                        asChild
                                                     >
-                                                        <Trash2 className="text-destructive" />
+                                                        <Link
+                                                            href={edit(
+                                                                album.id,
+                                                            )}
+                                                            aria-label={`Upraviť ${album.title}`}
+                                                        >
+                                                            <Pencil />
+                                                        </Link>
                                                     </Button>
-                                                </ConfirmDelete>
+                                                </Hint>
+                                                <Hint label="Zmazať album">
+                                                    <ConfirmDelete
+                                                        title={`Zmazať album ${album.title}?`}
+                                                        description="Zmažú sa aj všetky jeho fotky. Túto akciu nie je možné vrátiť."
+                                                        onConfirm={() =>
+                                                            router.delete(
+                                                                AlbumController.destroy.url(
+                                                                    album.id,
+                                                                ),
+                                                                {
+                                                                    preserveScroll: true,
+                                                                },
+                                                            )
+                                                        }
+                                                    >
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            aria-label={`Zmazať ${album.title}`}
+                                                        >
+                                                            <Trash2 className="text-destructive" />
+                                                        </Button>
+                                                    </ConfirmDelete>
+                                                </Hint>
                                             </div>
                                         </TableCell>
                                     </TableRow>

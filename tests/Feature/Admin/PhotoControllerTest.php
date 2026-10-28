@@ -104,3 +104,56 @@ test('deleting the cover photo clears the album cover', function () {
     expect(Photo::query()->count())->toBe(0)
         ->and($album->refresh()->cover_photo_id)->toBeNull();
 });
+
+test('deleting a photo removes its files from both disks', function () {
+    $album = Album::factory()->create();
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->post(route('admin.photos.store', $album), [
+        'photo' => UploadedFile::fake()->image('svadba.jpg', 800, 1200),
+    ]);
+
+    $photo = Photo::query()->sole();
+    $media = $photo->image();
+    $originalPath = $media->getPathRelativeToRoot();
+    $variantPath = $media->getPathRelativeToRoot('web');
+
+    Storage::disk('originals')->assertExists($originalPath);
+    Storage::disk('public')->assertExists($variantPath);
+
+    $this->actingAs($user)->delete(route('admin.photos.destroy', $photo));
+
+    Storage::disk('originals')->assertMissing($originalPath);
+    Storage::disk('public')->assertMissing($variantPath);
+});
+
+test('uploaded photos are rotated by their EXIF orientation and stripped of metadata', function () {
+    $album = Album::factory()->create();
+    $path = tempnam(sys_get_temp_dir(), 'exif-').'.jpg';
+
+    $source = new Imagick;
+    $source->newImage(400, 200, new ImagickPixel('red'));
+    $source->setImageFormat('jpeg');
+    $jpeg = $source->getImageBlob();
+
+    // Inject a minimal EXIF segment (little-endian, one Orientation=6 entry).
+    $tiff = 'II*'."\x00".pack('V', 8).pack('v', 1).pack('vvVvv', 0x0112, 3, 1, 6, 0).pack('V', 0);
+    $payload = "Exif\x00\x00".$tiff;
+    file_put_contents($path, substr($jpeg, 0, 2)."\xFF\xE1".pack('n', strlen($payload) + 2).$payload.substr($jpeg, 2));
+
+    $this->actingAs(User::factory()->create())
+        ->post(route('admin.photos.store', $album), [
+            'photo' => new UploadedFile($path, 'otocena.jpg', 'image/jpeg', null, true),
+        ])
+        ->assertSessionHasNoErrors();
+
+    $photo = Photo::query()->sole();
+    $stored = new Imagick(Storage::disk('originals')->path($photo->image()->getPathRelativeToRoot()));
+
+    expect($photo->width)->toBe(200)
+        ->and($photo->height)->toBe(400)
+        ->and($stored->getImageOrientation())->toBe(Imagick::ORIENTATION_UNDEFINED)
+        ->and($stored->getImageProperties('exif:*'))->toBe([]);
+
+    unlink($path);
+});

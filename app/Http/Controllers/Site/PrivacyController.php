@@ -22,7 +22,7 @@ class PrivacyController extends Controller
 
         return Inertia::render('site/privacy', [
             'operator' => $operator,
-            'updatedAt' => '15.10.2026',
+            'updatedAt' => config('site.privacy_updated_at'),
         ]);
     }
 }

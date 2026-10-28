@@ -14,6 +14,7 @@ use App\Http\Requests\Admin\ToggleRequest;
 use App\Http\Requests\Admin\UpdateAlbumRequest;
 use App\Http\Requests\Admin\UpdateCoverRequest;
 use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -56,10 +57,7 @@ class AlbumController extends Controller
                 'from' => $albums->firstItem(),
                 'to' => $albums->lastItem(),
             ],
-            'typeOptions' => array_map(
-                fn (AlbumType $type): array => ['value' => $type->value, 'label' => $type->label()],
-                AlbumType::cases(),
-            ),
+            'typeOptions' => AlbumType::options(),
             'filters' => $query->filter,
             'sort' => $query->sort,
         ]);
@@ -71,10 +69,7 @@ class AlbumController extends Controller
     public function create(): Response
     {
         return Inertia::render('admin/albums/create', [
-            'typeOptions' => array_map(
-                fn (AlbumType $type): array => ['value' => $type->value, 'label' => $type->label()],
-                AlbumType::cases(),
-            ),
+            'typeOptions' => AlbumType::options(),
         ]);
     }
 
@@ -117,11 +112,8 @@ class AlbumController extends Controller
 
         return Inertia::render('admin/albums/edit', [
             'album' => AlbumData::fromAlbum($album),
-            'photos' => PhotoData::collect($album->photos->map(fn ($photo) => PhotoData::fromPhoto($photo))),
-            'typeOptions' => array_map(
-                fn (AlbumType $type): array => ['value' => $type->value, 'label' => $type->label()],
-                AlbumType::cases(),
-            ),
+            'photos' => $album->photos->map(fn (Photo $photo): PhotoData => PhotoData::fromPhoto($photo))->all(),
+            'typeOptions' => AlbumType::options(),
         ]);
     }
 
@@ -183,9 +175,14 @@ class AlbumController extends Controller
             DB::transaction(function () use ($album, $data): void {
                 $ids = Album::query()->orderBy('sort_order')->orderBy('id')->pluck('id')->all();
                 $position = array_search($album->id, $ids, true);
+
+                if ($position === false) {
+                    return;
+                }
+
                 $target = $data->direction === 'up' ? $position - 1 : $position + 1;
 
-                if ($position === false || ! isset($ids[$target])) {
+                if (! isset($ids[$target])) {
                     return;
                 }
 

@@ -1,5 +1,11 @@
 import { router } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+    ArrowDown,
+    ArrowUp,
+    ArrowUpDown,
+    ChevronLeft,
+    ChevronRight,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -36,7 +42,8 @@ export function useListQuery(
     const visit = (query: Query) => {
         const filter = Object.fromEntries(
             Object.entries(query.filter).filter(
-                ([, value]) => value !== null && value !== undefined && value !== '',
+                ([, value]) =>
+                    value !== null && value !== undefined && value !== '',
             ),
         );
 

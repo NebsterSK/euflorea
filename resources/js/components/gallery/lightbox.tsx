@@ -111,14 +111,20 @@ export function Lightbox({
                         </p>
                         <DialogPrimitive.Close
                             className={cn(
-                                buttonVariants({ variant: 'paper', size: 'header' }),
+                                buttonVariants({
+                                    variant: 'paper',
+                                    size: 'header',
+                                }),
                             )}
                         >
                             Zavrieť
                         </DialogPrimitive.Close>
                     </div>
 
-                    <div ref={viewportRef} className="min-h-0 flex-1 overflow-hidden">
+                    <div
+                        ref={viewportRef}
+                        className="min-h-0 flex-1 overflow-hidden"
+                    >
                         <div className="flex h-full touch-pan-y">
                             {photos.map((photo, index) => (
                                 <div
@@ -155,7 +161,10 @@ export function Lightbox({
                                 type="button"
                                 aria-label="Predchádzajúca fotka"
                                 onClick={previous}
-                                className={cn(arrowClassName, 'lg:pointer-events-auto')}
+                                className={cn(
+                                    arrowClassName,
+                                    'lg:pointer-events-auto',
+                                )}
                             >
                                 <ChevronLeftIcon aria-hidden="true" />
                             </button>
@@ -163,7 +172,10 @@ export function Lightbox({
                                 type="button"
                                 aria-label="Ďalšia fotka"
                                 onClick={next}
-                                className={cn(arrowClassName, 'lg:pointer-events-auto')}
+                                className={cn(
+                                    arrowClassName,
+                                    'lg:pointer-events-auto',
+                                )}
                             >
                                 <ChevronRightIcon aria-hidden="true" />
                             </button>

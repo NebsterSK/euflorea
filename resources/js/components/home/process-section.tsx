@@ -29,11 +29,14 @@ const steps = [
 
 /**
  * "Ako to rastie": the taped process sheet over a full-bleed colour photo
- * (no overlay, the photo stays vivid).
+ * (no overlay, the photo stays vivid). The photo is 160% of the section
+ * height so the parallax drift never uncovers an edge; the section uses
+ * `overflow-clip`, because an `overflow-hidden` box is a scroll container
+ * and the view timeline would track it instead of the page.
  */
 export function ProcessSection() {
     return (
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-clip">
             <img
                 src={process1280}
                 srcSet={`${process800} 800w, ${process1280} 1280w, ${process1754} 1754w`}
@@ -43,10 +46,10 @@ export function ProcessSection() {
                 alt=""
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 size-full bg-photo-bg object-cover object-[center_40%] lg:object-[center_58%]"
+                className="absolute inset-x-0 -top-[30%] h-[160%] w-full parallax-drift bg-photo-bg object-cover object-[center_40%] lg:object-[center_58%]"
             />
             <div className="relative mx-auto max-w-page px-4 pt-75 pb-10 lg:px-10 lg:py-30">
-                <TapedSheet className="flex max-w-sheet flex-col gap-9 px-6 pt-13 pb-12 lg:gap-13 lg:px-14 lg:pt-16 lg:pb-15">
+                <TapedSheet className="flex max-w-sheet reveal flex-col gap-9 px-6 pt-13 pb-12 lg:gap-13 lg:px-14 lg:pt-16 lg:pb-15">
                     <div className="flex flex-wrap items-end justify-between gap-8">
                         <h2 className="font-serif text-[42px] leading-[1.05] text-plum md:text-[clamp(40px,4.4vw,64px)]">
                             Ako to <em>rastie</em>
@@ -61,7 +64,7 @@ export function ProcessSection() {
                         <VineVertical
                             aria-hidden="true"
                             preserveAspectRatio="none"
-                            className="absolute top-2.5 left-4.5 h-[calc(100%-20px)] w-5 text-rose-line md:hidden"
+                            className="absolute top-2.5 left-4.5 h-[calc(100%-20px)] w-5 draw-in text-rose-line md:hidden"
                         />
                         {steps.map((step) => (
                             <li
@@ -70,7 +73,7 @@ export function ProcessSection() {
                             >
                                 <span
                                     aria-hidden="true"
-                                    className="absolute -top-1 -left-16 flex size-12 items-center justify-center rounded-full border border-rose-line bg-white font-serif text-[22px] leading-none text-plum italic md:static md:mb-3 md:size-18 md:text-[30px]"
+                                    className="absolute -top-1 -left-16 flex size-12 reveal-pop items-center justify-center rounded-full border border-rose-line bg-white font-serif text-[22px] leading-none text-plum italic md:static md:mb-3 md:size-18 md:text-[30px]"
                                 >
                                     {step.numeral}
                                 </span>

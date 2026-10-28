@@ -12,7 +12,6 @@ export default function Home({
 }) {
     return (
         <>
-
             <div className="mx-auto flex max-w-page justify-center px-5 pt-10 lg:px-10 lg:pt-16">
                 <h1 className="w-full lg:w-[min(760px,86%)]">
                     <Logo withTagline />

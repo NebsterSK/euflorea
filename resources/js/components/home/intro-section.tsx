@@ -9,15 +9,15 @@ export function IntroSection() {
             <DillSprig
                 withSideBranch={false}
                 aria-hidden="true"
-                className="pointer-events-none absolute top-7.5 -right-3.5 h-55 w-25 text-rose opacity-80 lg:hidden"
+                className="pointer-events-none absolute top-7.5 -right-3.5 h-55 w-25 draw-in text-rose opacity-80 lg:hidden"
             />
-            <div className="flex flex-col gap-5">
+            <div className="flex reveal flex-col gap-5">
                 <Eyebrow>O nás</Eyebrow>
                 <h2 className="max-w-75 font-serif text-[44px] leading-[1.02] text-balance text-plum lg:max-w-none lg:text-[clamp(44px,5vw,72px)]">
                     Kvety, ktoré <em>rozprávajú</em> váš príbeh.
                 </h2>
             </div>
-            <div className="flex flex-col gap-5.5 pt-2 text-lead text-text lg:pt-11 lg:text-lead-lg">
+            <div className="flex reveal flex-col gap-5.5 pt-2 text-lead text-text lg:pt-11 lg:text-lead-lg">
                 <p>
                     Sme Euflorea, malé kvetinové štúdio, ktoré navrhuje a
                     realizuje svadobnú výzdobu. Pracujeme so sezónnymi kvetmi a

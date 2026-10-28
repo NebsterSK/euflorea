@@ -6,7 +6,6 @@ import type { ListOption } from '@/components/admin/list-controls';
 import { PhotoManager } from '@/components/admin/photo-manager';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { dashboard } from '@/routes';
 import { index } from '@/routes/admin/albums';
 import { show } from '@/routes/gallery';
@@ -48,22 +47,22 @@ export default function AlbumsEdit({
                     )}
                 </div>
 
-                <PhotoManager album={album} photos={photos} />
+                <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
+                    <PhotoManager album={album} photos={photos} />
 
-                <Separator />
-
-                <section className="flex max-w-4xl flex-col gap-5">
-                    <h2 className="text-xl font-semibold tracking-tight">
-                        Údaje albumu
-                    </h2>
-                    <AlbumForm
-                        key={album.id}
-                        action={AlbumController.update.form(album.id)}
-                        album={album}
-                        typeOptions={typeOptions}
-                        submitLabel="Uložiť album"
-                    />
-                </section>
+                    <section className="flex flex-col gap-5 border-t pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+                        <h2 className="text-xl font-semibold tracking-tight">
+                            Údaje albumu
+                        </h2>
+                        <AlbumForm
+                            key={album.id}
+                            action={AlbumController.update.form(album.id)}
+                            album={album}
+                            typeOptions={typeOptions}
+                            submitLabel="Uložiť album"
+                        />
+                    </section>
+                </div>
             </div>
         </>
     );
@@ -73,6 +72,9 @@ AlbumsEdit.layout = (props: { album: App.Data.Admin.AlbumData }) => ({
     breadcrumbs: [
         { title: 'Prehľad', href: dashboard() },
         { title: 'Albumy', href: index() },
-        { title: props.album.title, href: AlbumController.edit(props.album.id) },
+        {
+            title: props.album.title,
+            href: AlbumController.edit(props.album.id),
+        },
     ],
 });
