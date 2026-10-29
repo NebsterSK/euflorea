@@ -3,7 +3,34 @@ import { useRef, useState } from 'react';
 import { Lightbox } from '@/components/gallery/lightbox';
 import { CtaSection } from '@/components/site/cta-section';
 import { Eyebrow } from '@/components/site/paper';
+import { useGalleryColumns } from '@/hooks/use-gallery-columns';
 import { index, show } from '@/routes/gallery';
+
+type PlacedPhoto = {
+    photo: App.Data.Site.AlbumPageData['photos'][number];
+    position: number;
+};
+
+/**
+ * Fill the columns row by row: each photo goes to the currently shortest
+ * column, so the first photos form the top row in album order.
+ */
+function distributeIntoColumns(
+    photos: App.Data.Site.AlbumPageData['photos'],
+    columnCount: number,
+): PlacedPhoto[][] {
+    const columns: PlacedPhoto[][] = Array.from({ length: columnCount }, () => []);
+    const columnHeights: number[] = Array(columnCount).fill(0);
+
+    photos.forEach((photo, position) => {
+        const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+
+        columns[shortestColumn].push({ photo, position });
+        columnHeights[shortestColumn] += photo.width > 0 ? photo.height / photo.width : 1;
+    });
+
+    return columns;
+}
 
 export default function GalleryShow({
     album,
@@ -15,6 +42,10 @@ export default function GalleryShow({
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const triggers = useRef<(HTMLButtonElement | null)[]>([]);
     const lastOpened = useRef(0);
+    const photoColumns = distributeIntoColumns(
+        album.photos,
+        useGalleryColumns(),
+    );
 
     return (
         <>
@@ -42,39 +73,43 @@ export default function GalleryShow({
             </header>
 
             <div className="mx-auto max-w-page px-4 lg:px-10">
-                <ul className="columns-1 gap-4 md:columns-2 lg:columns-3 lg:gap-6">
-                    {album.photos.map((photo, position) => (
-                        <li
-                            key={photo.id}
-                            className="mb-4 break-inside-avoid lg:mb-6"
+                <div className="flex items-start gap-4 lg:gap-6">
+                    {photoColumns.map((column, columnIndex) => (
+                        <ul
+                            key={columnIndex}
+                            className="flex min-w-0 flex-1 flex-col gap-4 lg:gap-6"
                         >
-                            <button
-                                ref={(element) => {
-                                    triggers.current[position] = element;
-                                }}
-                                type="button"
-                                onClick={() => {
-                                    lastOpened.current = position;
-                                    setOpenIndex(position);
-                                }}
-                                aria-label={`Zväčšiť fotku ${position + 1} z ${album.photos.length}${photo.alt ? `: ${photo.alt}` : ''}`}
-                                className="block w-full reveal bg-paper-card p-1.5 shadow-card-sm transition-[translate,box-shadow] duration-500 ease-soft hover:-translate-y-0.5 hover:shadow-card lg:p-2"
-                            >
-                                <img
-                                    src={photo.src}
-                                    srcSet={photo.srcset}
-                                    sizes="(min-width: 1320px) 400px, (min-width: 1024px) 31vw, (min-width: 768px) 46vw, 92vw"
-                                    width={photo.width}
-                                    height={photo.height}
-                                    alt={photo.alt}
-                                    loading={position < 3 ? 'eager' : 'lazy'}
-                                    decoding="async"
-                                    className="block h-auto w-full bg-photo-bg"
-                                />
-                            </button>
-                        </li>
+                            {column.map(({ photo, position }) => (
+                                <li key={photo.id}>
+                                    <button
+                                        ref={(element) => {
+                                            triggers.current[position] = element;
+                                        }}
+                                        type="button"
+                                        onClick={() => {
+                                            lastOpened.current = position;
+                                            setOpenIndex(position);
+                                        }}
+                                        aria-label={`Zväčšiť fotku ${position + 1} z ${album.photos.length}${photo.alt ? `: ${photo.alt}` : ''}`}
+                                        className="block w-full reveal bg-paper-card p-1.5 shadow-card-sm transition-[translate,box-shadow] duration-500 ease-soft hover:-translate-y-0.5 hover:shadow-card lg:p-2"
+                                    >
+                                        <img
+                                            src={photo.src}
+                                            srcSet={photo.srcset}
+                                            sizes="(min-width: 1320px) 400px, (min-width: 1024px) 31vw, (min-width: 768px) 46vw, 92vw"
+                                            width={photo.width}
+                                            height={photo.height}
+                                            alt={photo.alt}
+                                            loading={position < 3 ? 'eager' : 'lazy'}
+                                            decoding="async"
+                                            className="block h-auto w-full bg-photo-bg"
+                                        />
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     ))}
-                </ul>
+                </div>
 
                 {next && (
                     <nav
