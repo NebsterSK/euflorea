@@ -178,8 +178,8 @@
   Gentle scroll parallax for full-bleed background photos: the element is
   taller than its section (see `ProcessSection`) and drifts as the section
   crosses the viewport. Pure CSS scroll-driven animation, so it runs off the
-  main thread; browsers without `animation-timeline` and visitors who prefer
-  reduced motion get a still photo.
+  main thread; browsers without `animation-timeline`, visitors who prefer
+  reduced motion and touch devices get a still photo.
 */
 @keyframes parallax-drift {
     from {
@@ -192,7 +192,7 @@
 
 @utility parallax-drift {
     @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
             animation: parallax-drift linear both;
             animation-timeline: view();
         }
@@ -202,6 +202,9 @@
 /*
   Scroll reveals, same mechanism as the parallax (scroll-driven, no JS, off
   for reduced motion and in browsers without `animation-timeline`).
+  Mouse-and-hover devices only: on low-end phones the scroll-linked
+  animations (the `draw-in` stroke ones repaint on the main thread) made
+  touch scrolling stutter.
   Keyframes only define the start; the end is the element's own styles, so
   tilts and offsets stay intact. `backwards` fill means nothing applies once
   the reveal is done, so hover transitions keep working. Ranges are in `vh`
@@ -236,7 +239,7 @@
 
 @utility reveal {
     @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
             animation: reveal-rise cubic-bezier(0.22, 0.7, 0.3, 1) backwards;
             animation-timeline: view();
             animation-range: cover 10vh cover 34vh;
@@ -246,7 +249,7 @@
 
 @utility reveal-pop {
     @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
             animation: reveal-pop cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
             animation-timeline: view();
             animation-range: cover 14vh cover 30vh;
@@ -256,7 +259,7 @@
 
 @utility draw-in {
     @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
             view-timeline-name: --draw-in;
 
             & :is(path, circle) {
