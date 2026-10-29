@@ -3,8 +3,9 @@ import type { SVGProps } from 'react';
 /**
  * Hand-drawn line art and icons (sources in `resources/images/svg`) as React
  * components, so they inherit `currentColor` and accept classes. Decorative
- * by default: pass `aria-hidden` or a label from the call site. Shapes of
- * the botanical drawings carry `pathLength={1}` so `draw-in` can draw them.
+ * by default: pass `aria-hidden` or a label from the call site. Each
+ * botanical drawing is a single path with `pathLength={1}` so `draw-in` can
+ * draw it.
  */
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -14,6 +15,19 @@ const line = {
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
 } as const;
+
+/** A circle as path data, so it can join a drawing's single path. */
+function dot(centerX: number, centerY: number, radius: number): string {
+    return `M${centerX - radius} ${centerY}a${radius} ${radius} 0 1 0 ${radius * 2} 0a${radius} ${radius} 0 1 0 ${-radius * 2} 0`;
+}
+
+/**
+ * Joins a drawing's strokes into one path, drawn in this order by `draw-in`:
+ * one shape keeps the per-frame cost of the animation low.
+ */
+function strokes(...parts: (string | false)[]): string {
+    return parts.filter(Boolean).join(' ');
+}
 
 export function ChevronLeftIcon(props: IconProps) {
     return (
@@ -77,15 +91,17 @@ export function HeartIcon(props: IconProps) {
 export function BouquetIcon(props: IconProps) {
     return (
         <svg viewBox="0 0 48 48" {...line} strokeWidth={1.1} {...props}>
-            <circle pathLength={1} cx="18" cy="12" r="5" />
-            <circle pathLength={1} cx="29" cy="10" r="4" />
-            <circle pathLength={1} cx="33" cy="19" r="4.5" />
-            <circle pathLength={1} cx="23" cy="20" r="4" />
             <path
                 pathLength={1}
-                d="M14 17c-2 3 0 6 4 6M20 24l4 18M24 24v18M28 23l-4 19"
+                d={strokes(
+                    dot(18, 12, 5),
+                    dot(29, 10, 4),
+                    dot(33, 19, 4.5),
+                    dot(23, 20, 4),
+                    'M14 17c-2 3 0 6 4 6M20 24l4 18M24 24v18M28 23l-4 19',
+                    'M17 30c4 2 10 2 14 0l-3 5h-8z',
+                )}
             />
-            <path pathLength={1} d="M17 30c4 2 10 2 14 0l-3 5h-8z" />
         </svg>
     );
 }
@@ -93,14 +109,19 @@ export function BouquetIcon(props: IconProps) {
 export function CeremonyArchIcon(props: IconProps) {
     return (
         <svg viewBox="0 0 48 48" {...line} strokeWidth={1.1} {...props}>
-            <path pathLength={1} d="M10 42V22a14 14 0 0 1 28 0v20" />
-            <path pathLength={1} d="M6 42h36" />
-            <circle pathLength={1} cx="12" cy="20" r="2.5" />
-            <circle pathLength={1} cx="15" cy="13" r="2" />
-            <circle pathLength={1} cx="21" cy="9" r="2.5" />
-            <circle pathLength={1} cx="28" cy="9" r="2" />
-            <circle pathLength={1} cx="34" cy="14" r="2.5" />
-            <path pathLength={1} d="M13 25c-2-1-3-3-2-5M36 20c2 1 2 3 1 5" />
+            <path
+                pathLength={1}
+                d={strokes(
+                    'M10 42V22a14 14 0 0 1 28 0v20',
+                    'M6 42h36',
+                    dot(12, 20, 2.5),
+                    dot(15, 13, 2),
+                    dot(21, 9, 2.5),
+                    dot(28, 9, 2),
+                    dot(34, 14, 2.5),
+                    'M13 25c-2-1-3-3-2-5M36 20c2 1 2 3 1 5',
+                )}
+            />
         </svg>
     );
 }
@@ -108,11 +129,16 @@ export function CeremonyArchIcon(props: IconProps) {
 export function TableIcon(props: IconProps) {
     return (
         <svg viewBox="0 0 48 48" {...line} strokeWidth={1.1} {...props}>
-            <path pathLength={1} d="M6 30h36M10 30l-2 12M38 30l2 12" />
-            <path pathLength={1} d="M16 30V18M16 18c-1-2 0-4 0-5 0 1 1 3 0 5" />
-            <path pathLength={1} d="M32 30V16M32 16c-1-2 0-4 0-5 0 1 1 3 0 5" />
-            <path pathLength={1} d="M20 30c0-4 2-7 4-7s4 3 4 7" />
-            <circle pathLength={1} cx="24" cy="19" r="3" />
+            <path
+                pathLength={1}
+                d={strokes(
+                    'M6 30h36M10 30l-2 12M38 30l2 12',
+                    'M16 30V18M16 18c-1-2 0-4 0-5 0 1 1 3 0 5',
+                    'M32 30V16M32 16c-1-2 0-4 0-5 0 1 1 3 0 5',
+                    'M20 30c0-4 2-7 4-7s4 3 4 7',
+                    dot(24, 19, 3),
+                )}
+            />
         </svg>
     );
 }
@@ -122,14 +148,13 @@ export function VenueVaseIcon(props: IconProps) {
         <svg viewBox="0 0 48 48" {...line} strokeWidth={1.1} {...props}>
             <path
                 pathLength={1}
-                d="M18 42h12M19 42c-3-4-3-9 0-12h10c3 3 3 8 0 12"
+                d={strokes(
+                    'M18 42h12M19 42c-3-4-3-9 0-12h10c3 3 3 8 0 12',
+                    'M24 30V14M24 22c-4-1-6-4-6-8 4 1 6 4 6 8zM24 18c3-1 5-4 5-7-3 1-5 3-5 7',
+                    'M24 14c-1-3 0-6 0-8',
+                    dot(24, 5, 1.5),
+                )}
             />
-            <path
-                pathLength={1}
-                d="M24 30V14M24 22c-4-1-6-4-6-8 4 1 6 4 6 8zM24 18c3-1 5-4 5-7-3 1-5 3-5 7"
-            />
-            <path pathLength={1} d="M24 14c-1-3 0-6 0-8" />
-            <circle pathLength={1} cx="24" cy="5" r="1.5" />
         </svg>
     );
 }
@@ -144,38 +169,31 @@ export function DillSprig({
 }: IconProps & { withSideBranch?: boolean }) {
     return (
         <svg viewBox="0 0 120 260" {...line} strokeWidth={1.1} {...props}>
-            <path pathLength={1} d="M60 258C58 200 62 140 58 60" />
             <path
                 pathLength={1}
-                d="M58 60l-14-18M58 60l-6-22M58 60l2-23M58 60l10-20M58 60l17-14"
+                d={strokes(
+                    'M60 258C58 200 62 140 58 60',
+                    'M58 60l-14-18M58 60l-6-22M58 60l2-23M58 60l10-20M58 60l17-14',
+                    dot(44, 41, 2.2),
+                    dot(52, 37, 2.2),
+                    dot(60, 36, 2.2),
+                    dot(68, 39, 2.2),
+                    dot(75, 45, 2.2),
+                    'M59 150c10-20 20-36 34-48',
+                    'M93 102l-10-12M93 102l-2-15M93 102l6-13M93 102l12-7',
+                    dot(83, 89, 2),
+                    dot(91, 86, 2),
+                    dot(99, 88, 2),
+                    dot(105, 94, 2),
+                    withSideBranch && 'M59 180c-10-16-22-28-36-34',
+                    withSideBranch &&
+                        'M23 146l-6-12M23 146l2-14M23 146l9-10M23 146l-12-4',
+                    withSideBranch && dot(17, 133, 1.8),
+                    withSideBranch && dot(25, 131, 1.8),
+                    withSideBranch && dot(32, 135, 1.8),
+                    withSideBranch && dot(11, 141, 1.8),
+                )}
             />
-            <circle pathLength={1} cx="44" cy="41" r="2.2" />
-            <circle pathLength={1} cx="52" cy="37" r="2.2" />
-            <circle pathLength={1} cx="60" cy="36" r="2.2" />
-            <circle pathLength={1} cx="68" cy="39" r="2.2" />
-            <circle pathLength={1} cx="75" cy="45" r="2.2" />
-            <path pathLength={1} d="M59 150c10-20 20-36 34-48" />
-            <path
-                pathLength={1}
-                d="M93 102l-10-12M93 102l-2-15M93 102l6-13M93 102l12-7"
-            />
-            <circle pathLength={1} cx="83" cy="89" r="2" />
-            <circle pathLength={1} cx="91" cy="86" r="2" />
-            <circle pathLength={1} cx="99" cy="88" r="2" />
-            <circle pathLength={1} cx="105" cy="94" r="2" />
-            {withSideBranch && (
-                <>
-                    <path pathLength={1} d="M59 180c-10-16-22-28-36-34" />
-                    <path
-                        pathLength={1}
-                        d="M23 146l-6-12M23 146l2-14M23 146l9-10M23 146l-12-4"
-                    />
-                    <circle pathLength={1} cx="17" cy="133" r="1.8" />
-                    <circle pathLength={1} cx="25" cy="131" r="1.8" />
-                    <circle pathLength={1} cx="32" cy="135" r="1.8" />
-                    <circle pathLength={1} cx="11" cy="141" r="1.8" />
-                </>
-            )}
         </svg>
     );
 }

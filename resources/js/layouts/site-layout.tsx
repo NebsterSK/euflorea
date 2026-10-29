@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { SiteFooter } from '@/components/site/site-footer';
 import { ServerHead } from '@/components/site/server-head';
 import { SiteHeader } from '@/components/site/site-header';
+import { useDrawIn } from '@/hooks/use-draw-in';
 import { useSmoothScroll } from '@/hooks/use-smooth-scroll';
 
 /**
@@ -12,6 +13,7 @@ import { useSmoothScroll } from '@/hooks/use-smooth-scroll';
  */
 export default function SiteLayout({ children }: { children: ReactNode }) {
     useSmoothScroll();
+    useDrawIn();
 
     return (
         <div className="flex min-h-svh flex-col overflow-x-clip text-ink">

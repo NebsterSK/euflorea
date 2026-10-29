@@ -61,11 +61,17 @@ export function ProcessSection() {
                     </div>
 
                     <ol className="relative flex flex-col gap-9 pl-16 md:grid md:grid-cols-2 md:gap-x-12 md:gap-y-10 md:pl-0">
-                        <VineVertical
+                        <div
                             aria-hidden="true"
-                            preserveAspectRatio="none"
-                            className="absolute top-2.5 left-4.5 h-[calc(100%-20px)] w-5 draw-in text-rose-line md:hidden"
-                        />
+                            className="absolute top-2.5 left-4.5 h-[calc(100%-20px)] w-5 draw-wipe text-rose-line md:hidden"
+                        >
+                            <div>
+                                <VineVertical
+                                    preserveAspectRatio="none"
+                                    className="size-full"
+                                />
+                            </div>
+                        </div>
                         {steps.map((step) => (
                             <li
                                 key={step.numeral}
